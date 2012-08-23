@@ -18,18 +18,11 @@
 % <http://www.gnu.org/licenses/>.
 %
 function mt404_p01q03b ()
-    % n = 2
-    A = triu(rand(2))
-    pow2_triu(A)
-    % n = 5
-    A = triu(rand(5))
-    pow2_triu(A)
-    % n = 10
-    A = triu(rand(10))
-    pow2_triu(A)
-    % n = 20
-    A = triu(rand(20))
-    pow2_triu(A)
+    n = [2, 5, 10, 20];
+    for i = 1:length(n)
+        A = triu(rand(n(i)))
+        pow2_triu(A)
+    end
 end
 
 function [ A ] = pow2_triu (A)

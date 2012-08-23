@@ -18,24 +18,15 @@
 % <http://www.gnu.org/licenses/>.
 %
 function mt404_p01q02b ()
-    % m = n = 5 e r = 1
-    A = rand(5) .* sign(conv2(eye(5),ones(1+1),'same'));;
-    x = rand(5,1);
-    c = meu_prod_mbv(A, x, 1);
-    gnuo = A * x;
-    compara_prod(gnuo, c);
-    % m = n = 10 e r = 2
-    A = rand(10) .* sign(conv2(eye(10),ones(2+1),'same'));;
-    x = rand(10,1);
-    c = meu_prod_mbv(A, x, 2);
-    gnuo = A * x;
-    compara_prod(gnuo, c);
-    % m = n = 20 e r = 2
-    A = rand(20) .* sign(conv2(eye(20),ones(2+1),'same'));;
-    x = rand(20,1);
-    c = meu_prod_mbv(A, x, 2);
-    gnuo = A * x;
-    compara_prod(gnuo, c);
+    n = [5, 10, 20];
+    r = [1, 2, 2];
+    for i = 1:length(n)
+        A = rand(n(i)) .* sign(conv2(eye(n(i)),ones(1+r(i)),'same'));;
+        x = rand(n(i),1);
+        c = meu_prod_mbv(A, x, n(i));
+        gnuo = A * x;
+        compara_prod(gnuo, c);
+    end
 end
 
 function [ c ] = meu_prod_mbv (A, x, r)

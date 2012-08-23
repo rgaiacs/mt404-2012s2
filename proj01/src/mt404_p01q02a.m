@@ -18,30 +18,14 @@
 % <http://www.gnu.org/licenses/>.
 %
 function mt404_p01q02a ()
-    % Para n = m = 2
-    A = rand(2);
-    x = rand(2,1);
-    c = meu_prod_mv(A, x);
-    gnuo = A * x;
-    compara_prod(gnuo, c);
-    % Para n = m = 5
-    A = rand(5);
-    x = rand(5,1);
-    c = meu_prod_mv(A, x);
-    gnuo = A * x;
-    compara_prod(gnuo, c);
-    % Para n = m = 10
-    A = rand(10);
-    x = rand(10,1);
-    c = meu_prod_mv(A, x);
-    gnuo = A * x;
-    compara_prod(gnuo, c);
-    % Para n = m = 20
-    A = rand(20);
-    x = rand(20,1);
-    c = meu_prod_mv(A, x);
-    gnuo = A * x;
-    compara_prod(gnuo, c);
+    n = [2, 5, 10, 20];
+    for i = 1:length(n)
+        A = rand(n(i));
+        x = rand(n(i),1);
+        c = meu_prod_mv(A, x);
+        gnuo = A * x;
+        compara_prod(gnuo, c);
+    end
 end
 
 function [ c ] = meu_prod_mv (A, x)

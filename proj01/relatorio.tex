@@ -22,7 +22,7 @@
 \input{../packages.tex}
 \begin{document}
 \title{Projeto No.1 de MT404}
-\author{Raniere Silva \\ ra092767 \and Julio Cesar}
+\author{Raniere Silva \\ ra092767  \and Julio Cesar \\ ra984581}
 \maketitle
 \begin{abstract}
     Este \'{e} o projeto no.1 da disciplina MT404 - M\'{e}todos Computacionais de \'{A}lgebra Linear. Neste projeto \'{e} abordado algumas opera\c{c}\~{o}es com vetores e matrizes. Duas pequenas demonstra\c{c}\~{o}es s\~{a}o apresentadas e os c\'{o}digos produzidos encontram-se no final.
@@ -36,13 +36,71 @@ Salvo disposi\c{c}\~{a}o em contr\'{a}rio, este trabalho foi licenciado com uma 
 \end{center}
 \newpage
 \section{Pot\^{e}ncia de Matrizes da forma $xy^T$}
+\begin{prop}
+    Dados $x, y \in \mathbb{R}^n$ então é válido
+    \begin{align}
+        (x y^T)^k = (x^T y)^{k - 1} (x y^T), \label{eq:pot_matriz}
+    \end{align}
+para $k = 1, 2, \ldots$.
+\end{prop}
+\begin{proof}
+    Vamos provar utilizando indução finita sobre $k$.
+    
+    Para $k = 1$ temos que
+    \begin{align*}
+        & (x y^T)^1 = (x y^T), \\
+        & (x^T y)^{1 - 1} (x y^T) = (x^T y)^0 (x y^T) = (x y^T)
+    \end{align*}
+    e, portanto \eqref{eq:pot_matriz} é válido.
+    
+    Assumindo que \eqref{eq:pot_matriz} é válido para $k = n$, vamos mostrar que também é válido para $k = n + 1$:
+    \begin{align*}
+        (x y^T)^{n + 1} &= (x y^T)^n (x y^T)  \\
+        &= (x^T y)^{n - 1} (x y^T) (x y^T) && \text{por \eqref{eq:pot_matriz} para $k = n$}\\
+        &= (x^T y)^{n - 1} x (y^T x) y^T \\
+        &= (x^T y)^{n - 1} (y^T x) (x y^T) \\
+        &= (x^T y)^{n - 1} (x^T y) (x y^T) \\
+        &= (x^T y)^{n} (x y^T).
+    \end{align*}
+    Pelo resultado acima, $(x y^T)^{n + 1} = (x^T y)^{n} (x y^T)$ e assim concluimos nossa demonstração.
+\end{proof}
+
+O Código~\ref{code:mt404_p01q01b} corresponde a implementação de de $C = (x y^T)^k$ utilizando o resultado da proposição anterior. A seguir, apresentamos parte da saída obtida ao executarmos o Código~\ref{code:mt404_p01q01b} em um de nossos testes.
 \lstinputlisting[style=outputs, nolol=true]{src/mt404_p01q01b.out}
+
+\section{Produto de Matriz por vetor}
+O Código~\ref{code:mt404_p01q02a} corresponde a implementação do produto de matriz por vetor na sua versão por coluna.
+\lstinputlisting[style=outputs, nolol=true]{src/mt404_p01q02a.out}
+
+O Código~\ref{code:mt404_p01q02b} corresponde a versão modificada do Código~\ref{code:mt404_p01q02a} para o produto de uma matriz de banda $2r + 1$ por um vetor de maneira eficiente.
+\lstinputlisting[style=outputs, nolol=true]{src/mt404_p01q02b.out}
+
 \section{Quadrado de Matrizes Triangulares}
+\begin{prop}
+    Seja $A \in \mathbb{R}^{n \times n}$ uma matriz triangular superior. Então $A^2 = A A$ também é uma matriz triangular superior.
+\end{prop}
+\begin{proof}
+    Seja $A = (a_{ij})$, $i, j \in \{1, \ldots, n\}$, uma matriz triangular superior, i.e., $a_{ij} = 0$ se $i > j$.
+    
+    Como o produto de duas matrizes $B, C \in \mathbb{R}^{n \times n}$ é dado por
+    \begin{align*}
+        (B C)_{ij} &= \sum_{k = 1}^n b_{ik} c_{kj},
+    \end{align*}
+    para $i,j \in \{1, \ldots, n\}$, então $A^2$ observa-se que
+    \begin{align*}
+        (A^2)_{ij} &= \sum_{k = 1}^n a_{ik} a_{kj}.
+    \end{align*}
+    Mas $a_{ik} = 0$ se $i > k$ e $a_{jk} = 0$ se $k > j$, então por transitividade $i > k > j$ que implica em $(A^2)_{ij} = 0$ para $i > j$ e portanto $A^2$ também é uma matriz triangular superior.
+\end{proof}
+
+O Código~\ref{code:mt404_p01q03b} corresponde a implementação do quadrado de uma matriz triangular superior em que o resultado é armazenado na matriz de entrada. A seguir, apresentamos parte da saída obtida ao executarmos o Código~\ref{code:mt404_p01q03b} em um de nossos testes.
+%\lstinputlisting[style=outputs, nolol=true]{src/mt404_p01q03b.out}
+
 \section{C\'{o}digos}
-\lstinputlisting[style=codes, caption={Quest\~{a}o 01, item b}, label={mt404_p01q01b}]{src/mt404_p01q01b.m}
-\lstinputlisting[style=codes, caption={Quest\~{a}o 02, item a}, label={mt404_p01q02a}]{src/mt404_p01q02a.m}
-\lstinputlisting[style=codes, caption={Quest\~{a}o 02, item b}, label={mt404_p01q02b}]{src/mt404_p01q02b.m}
-\lstinputlisting[style=codes, caption={Quest\~{a}o 03, item b}, label={mt404_p01q03b}]{src/mt404_p01q03b.m}
+\lstinputlisting[style=codes, caption={Quest\~{a}o 01, item b}, label={code:mt404_p01q01b}]{src/mt404_p01q01b.m}
+\lstinputlisting[style=codes, caption={Quest\~{a}o 02, item a}, label={code:mt404_p01q02a}]{src/mt404_p01q02a.m}
+\lstinputlisting[style=codes, caption={Quest\~{a}o 02, item b}, label={code:mt404_p01q02b}]{src/mt404_p01q02b.m}
+\lstinputlisting[style=codes, caption={Quest\~{a}o 03, item b}, label={code:mt404_p01q03b}]{src/mt404_p01q03b.m}
 \end{document}
 
 
