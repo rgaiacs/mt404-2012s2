@@ -21,8 +21,9 @@ function mt404_p01q01b ()
     n = [3, 3, 4, 4, 6, 6, 10, 10];
     k = [4, 6, 5, 10, 4, 8, 8, 14];
     for i = 1:length(n)
-        x = rand(n(i),1);
-        y = rand(n(i),1);
+        x = rand(n(i),1)
+        y = rand(n(i),1)
+		k(i)
         power_prod_ext(x,y,k(i))
     end
 end

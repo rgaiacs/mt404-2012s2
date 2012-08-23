@@ -30,7 +30,7 @@
 \tableofcontents
 \lstlistoflistings
 \section*{Licen\c{c}a}
-Salvo disposi\c{c}\~{a}o em contr\'{a}rio, este trabalho foi licenciado com uma Licen\c{c}a Creative Commons Atribui\c{c}\~{a}o - CompartilhaIgual 3.0 N\~{a}o Adaptada License. Para ver uma c\'{o}pia desta licen\c{c}a, visite http://creativecommons.org/licenses/by-sa/3.0/.
+Salvo disposi\c{c}\~{a}o em contr\'{a}rio, este trabalho foi licenciado com uma Licen\c{c}a Creative Commons Atribui\c{c}\~{a}o - CompartilhaIgual 3.0 N\~{a}o Adaptada. Para ver uma c\'{o}pia desta licen\c{c}a, visite http://creativecommons.org/licenses/by-sa/3.0/.
 \begin{center}
     \includegraphics{../figuras/cc-by-sa.png}
 \end{center}
@@ -69,10 +69,14 @@ O Código~\ref{code:mt404_p01q01b} corresponde a implementação de de $C = (x y
 \lstinputlisting[style=outputs, nolol=true]{src/mt404_p01q01b.out}
 
 \section{Produto de Matriz por vetor}
-O Código~\ref{code:mt404_p01q02a} corresponde a implementação do produto de matriz por vetor na sua versão por coluna.
+O Código~\ref{code:mt404_p01q02a} corresponde a implementação do produto de matriz por vetor na sua versão por coluna. Também foi implementado uma rotina que compara o resultado do produto de matriz por vetor desenvolvido com o resultado obtido ao utilizar o comando nativo do GNU Octave e informa se estes foram iguais ou não.
+
+A seguir, apresentamos a saída obtida ao executarmos o Código~\ref{code:mt404_p01q02a} em um de nossos testes.
 \lstinputlisting[style=outputs, nolol=true]{src/mt404_p01q02a.out}
 
-O Código~\ref{code:mt404_p01q02b} corresponde a versão modificada do Código~\ref{code:mt404_p01q02a} para o produto de uma matriz de banda $2r + 1$ por um vetor de maneira eficiente.
+Já o Código~\ref{code:mt404_p01q02b} corresponde a versão modificada do Código~\ref{code:mt404_p01q02a} para o produto de uma matriz de banda $2r + 1$ por um vetor de maneira eficiente. Assim como no  Código~\ref{code:mt404_p01q02a}, foi implementado uma rotina que compara o resultado do produto de matriz por vetor desenvolvido com o resultado obtido ao utilizar o comando nativo do GNU Octave e informa se estes foram iguais ou não.
+
+A seguir, apresentamos a saída obtida ao executarmos o Código~\ref{code:mt404_p01q02b} em um de nossos testes.
 \lstinputlisting[style=outputs, nolol=true]{src/mt404_p01q02b.out}
 
 \section{Quadrado de Matrizes Triangulares}
@@ -86,17 +90,18 @@ O Código~\ref{code:mt404_p01q02b} corresponde a versão modificada do Código~\
     \begin{align*}
         (B C)_{ij} &= \sum_{k = 1}^n b_{ik} c_{kj},
     \end{align*}
-    para $i,j \in \{1, \ldots, n\}$, então $A^2$ observa-se que
+    para $i,j \in \{1, \ldots, n\}$, então para $A^2$ observa-se que
     \begin{align*}
         (A^2)_{ij} &= \sum_{k = 1}^n a_{ik} a_{kj}.
     \end{align*}
-    Mas $a_{ik} = 0$ se $i > k$ e $a_{jk} = 0$ se $k > j$, então por transitividade $i > k > j$ que implica em $(A^2)_{ij} = 0$ para $i > j$ e portanto $A^2$ também é uma matriz triangular superior.
+    Então, verifica-se que para $i < j$ ocorre $(A^2)_{ij} = 0$ pois $a_{ik} = 0$ quando $i > k$ e $a_{jk} = 0$ quando $k > j$ de maneira que $a_{ik} a_{kj} = 0$ para $k \in \{1, \ldots, n\}$ e assim $\sum_{k = 1}^n a_{ik} a_{kj} = 0$. Portanto $A^2$ também é uma matriz triangular superior.
 \end{proof}
 
 O Código~\ref{code:mt404_p01q03b} corresponde a implementação do quadrado de uma matriz triangular superior em que o resultado é armazenado na matriz de entrada. A seguir, apresentamos parte da saída obtida ao executarmos o Código~\ref{code:mt404_p01q03b} em um de nossos testes.
-%\lstinputlisting[style=outputs, nolol=true]{src/mt404_p01q03b.out}
+\lstinputlisting[style=outputs, nolol=true]{src/mt404_p01q03b.out}
 
 \section{C\'{o}digos}
+A seguir encontra-se os códigos desenvolvidos neste projeto. Todos os códigos foram testados utilizando o GNU Octave em sua versão 3.2.4\footnote{Acredita-se que os códigos sejam compatíveis com o MATLAB embora não tenham sido testados nesse ambiente.} e encontram-se disponíveis em \url{https://github.com/r-gaia-cs/mt404-2012s2}.
 \lstinputlisting[style=codes, caption={Quest\~{a}o 01, item b}, label={code:mt404_p01q01b}]{src/mt404_p01q01b.m}
 \lstinputlisting[style=codes, caption={Quest\~{a}o 02, item a}, label={code:mt404_p01q02a}]{src/mt404_p01q02a.m}
 \lstinputlisting[style=codes, caption={Quest\~{a}o 02, item b}, label={code:mt404_p01q02b}]{src/mt404_p01q02b.m}
