@@ -17,8 +17,7 @@
 % <http://www.gnu.org/licenses/>.
 %
 function t = mt404_p02 ()
-    dim = [10];
-    % dim = [500, 1000, 2000, 5000, 6000];
+    dim = [500, 1000, 2000, 5000, 6000];
 
     % t(1,:) corresponde ao tempo sem nenhum aproveitamento da 
     % estrutura especial.
@@ -34,7 +33,7 @@ function t = mt404_p02 ()
 
         % Sem aproveitamento da estrutura especial.
         tic;
-        y = A * x
+        y = A * x;
         t(1, i) = toc;
 
         % Utilizando sparse.
@@ -46,7 +45,7 @@ function t = mt404_p02 ()
         % Utilizando spdiags
         Aux = spdiags(A);
         tic;
-        prod_matrix_spdiags(Aux, x, 2, 2)
+        prod_matrix_spdiags(Aux, x, 2, 2);
         t(3,i) = toc;
     end
 end
@@ -59,7 +58,7 @@ function [ y ] = prod_matrix_spdiags (A, x, p, q)
     % i corresponde as linhas
     for i = 1:m
         % j corresponde as colunas
-        for j = max(i-d, 1):min(i+p,m)
+        for j = max(i-q, 1):min(i+p,m)
             % A(i,j) = (spdiags(A))(j, j - 1 + q + 1)
             y(i) = y(i) + A(j, j - i + p + 1) * x(j);
         end

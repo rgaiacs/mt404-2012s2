@@ -35,8 +35,111 @@ Salvo disposi\c{c}\~{a}o em contr\'{a}rio, este trabalho foi licenciado com uma 
 \end{center}
 \newpage
 \section{Armazenamento de Matrizes}
+Considere $A \in \mathbb{R}^{m \times n}$ uma matriz de banda com banda superior com amplitude $q$ e banda inferior com amplitude $p$, i.e., $A$ \'{e} da forma
+\begin{align*}
+    \begin{bmatrix}
+        a_{1,1} & a_{1,2} & \ldots & a_{1,q} & 0 & 0 & \ldots & 0 \\
+        a_{2,1} & a_{2,2} & \ldots & a_{2,q} & a_{2,q+1} & 0 & \ldots & 0 \\
+        \vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \ddots & \vdots \\
+        a_{p,1} & a_{p,2} & \ldots & a_{p,q} & a_{p,q+1} & a_{p,q+2} & \ldots & 0 \\
+        0 & a_{p+1,2} & \ldots & a_{p+1,q} & a_{p+1,q+1} & a_{p+1,q+2} & \ldots & 0 \\
+        \vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \ddots & \vdots \\
+        0 & 0 & \ldots & 0 & 0 & 0 & \ldots & a_{mn} \\
+    \end{bmatrix}.
+\end{align*}
+
+Existe ao menos tr\^{e}s estruturas de dados que podem ser utilizadas para armazenar a $A$ em um computador. A primeira delas n\~{a}o aproveita a estrutura especial da matriz, i.e., a matriz \'{e} armazenada como um vetor de vetores (ver a Figura~\ref{fig:est_dados_matriz} para o caso em que $m = n = 5$ e $q = p = 1$).
+\begin{figure}[!htb]
+    \centering
+    \begin{tikzpicture}
+        \node[below right] (A) at (0,0) {$A$};
+        \node[below right] (B) at (2,0) {
+            \begin{tabular}{|c|c|c|c|c|}
+                \hline
+                $a_{11}$ & $a_{12}$ & $0$ & $0$ & $0$ \\ \hline
+                $a_{21}$ & $a_{22}$ & $a_{23}$ & $0$ & $0$ \\ \hline
+                $0$ & $a_{32}$ & $a_{33}$ & $a_{34}$ & $0$ \\ \hline
+                $0$ & $0$ & $a_{43}$ & $a_{44}$ & $a_{45}$ \\ \hline
+                $0$ & $0$ & $0$ & $a_{54}$ & $a_{55}$ \\ \hline
+            \end{tabular}};
+        \draw[->] (.5,-.25) -- (2,-.25);
+    \end{tikzpicture}
+    \caption{Estrutura de dados para matriz tridiagonal sem aproveitamento da estrutura especial da matriz.}
+    \label{fig:est_dados_matriz}
+\end{figure}
+
+A segunda maneira, muito utilizada para matrizes esparsas gen\'{e}ricas, consiste em tr\^{e}s vetores, $i$, $j$ e $v$, tal que $v_k = A_{i_k, j_k}$ e $v_k \neq 0$ para todo $k$ (ver a Figura~\ref{fig:est_dados_nao_nulos} para o caso em que $m = n = 5$ e $q = p = 1$).
+\begin{figure}[!htb]
+    \centering
+    \begin{tikzpicture}
+        \node[below right] (i) at (0,0) {$i$};
+        \node[below right] (vi) at (2,0) {
+            \begin{tabular}{|p{.75cm}|p{.75cm}|p{.75cm}|p{.75cm}|p{.75cm}|p{.75cm}|p{.75cm}|p{.75cm}|}
+                \hline
+                $1$ & $1$ & $2$ & $2$ & $2$ & \ldots & $5$ \\ \hline
+            \end{tabular}};
+        \draw[->] (.5,-.25) -- (2,-.25);
+        \node[below right] (j) at (0,-1) {$j$};
+        \node[below right] (vj) at (2,-1) {
+            \begin{tabular}{|p{.75cm}|p{.75cm}|p{.75cm}|p{.75cm}|p{.75cm}|p{.75cm}|p{.75cm}|p{.75cm}|}
+                \hline
+                $1$ & $2$ & $1$ & $2$ & $3$ & \ldots & $5$ \\ \hline
+            \end{tabular}};
+            \draw[->] (.5,-1.25) -- (2,-1.25);
+        \node[below right] (a) at (0,-2) {$v$};
+        \node[below right] (va) at (2,-2) {
+            \begin{tabular}{|p{.75cm}|p{.75cm}|p{.75cm}|p{.75cm}|p{.75cm}|p{.75cm}|p{.75cm}|p{.75cm}|}
+                \hline
+                $a_{11}$ & $a_{12}$ & $a_{21}$ & $a_{22}$ & $a_{23}$ & \ldots & $a_{55}$ \\ \hline
+            \end{tabular}};
+            \draw[->] (.5,-2.25) -- (2,-2.25);
+    \end{tikzpicture}
+    \caption{Estrutura de dados para matriz tridiagonal armazenando apenas elementos n\~{a}o nulos.}
+    \label{fig:est_dados_nao_nulos}
+\end{figure}
+
+J\'{a} a terceira e \'{u}ltima maneira, utilizada apenas para matrizes de banda, consiste em armazenar as diagonais n\~{a}o nulas em colunas (ver a Figura~\ref{fig:est_dados_diag2col} para o caso em que $m = n = 5$ e $q = p = 1$).
+\begin{figure}[!htb]
+    \centering
+    \begin{tikzpicture}
+        \node[below right] (A) at (0,0) {$A$};
+        \node[below right] (B) at (2,0) {
+            \begin{tabular}{|c|c|c|c|c|}
+                \hline
+                $a_{21}$ & $a_{11}$ & $0$ \\ \hline
+                $a_{32}$ & $a_{22}$ & $a_{12}$ \\ \hline
+                $a_{43}$ & $a_{33}$ & $a_{23}$ \\ \hline
+                $a_{54}$ & $a_{44}$ & $a_{34}$ \\ \hline
+                $0$ & $a_{55}$ & $a_{45}$ \\ \hline
+            \end{tabular}};
+        \draw[->] (.5,-.25) -- (2,-.25);
+    \end{tikzpicture}
+    \caption{Estrutura de dados para matriz tridiagonal armazenando as diagonais como colunas.}
+    \label{fig:est_dados_diag2col}
+\end{figure}
+
+\section{Teste Computacional}
+Implementou-se, ver C\'{o}digo~\ref{code:mt404_p02}, a multiplica\c{c}\~{a}o de uma matriz $A \in \mathbb{R}^{m \time n}$ de banda (banda superior com amplitude $q$ e banda inferior com amplitude $p$) por um vetor $x \in \mathbb{R}^n$ para as tr\^{e}s maneira de armazenar a matriz $A$ apresentadas na se\c{c}\~{a}o anterior.
+
+Testou-se a implementa\c{c}\~{a}o com matrizes pentadiagonais geradas aleatoriamente, de dimens\~{o}es $m = n = 500, 1000, 2000, 5000, 6000$, e a sa\'{i}da obtida para um dos testes encontra-se a seguir:
+\lstinputlisting[style=outputs, nolol=true]{src/mt404_p02.out}
+
+% TODO Escrever coment\'{a}rios sobre os resultados.
+A sa\'{i}da apresentada acima corresponde a Tabela~\ref{tab:tempo_prod} na qual observa que 
+\begin{table}[!htb]
+    \centering
+    \caption{Tempo do produto de matriz de banda pelo tipo de armazenamento.}
+    \label{tab:tempo_prod}
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        & 500 & 1000 & 2000 & 5000 & 6000 \\ \hline
+        Figura~\ref{fig:est_dados_matriz} & 6.8903e-04 & 1.9510e-03 & 8.4620e-03 & 5.6835e-02 & 8.1086e-02 \\ \hline
+        Figura~\ref{fig:est_dados_nao_nulos} & 6.9141e-05 & 1.0705e-04 & 2.1505e-04 & 4.5204e-04 & 6.5804e-04 \\ \hline
+        Figura~\ref{fig:est_dados_diag2col} & 5.1620e-02 & 1.1193e-01 & 2.2656e-01 & 5.5190e-01 & 6.6570e-01 \\ \hline
+    \end{tabular}
+\end{table}
 
 \section{C\'{o}digos}
 A seguir encontra-se os códigos desenvolvidos neste projeto. Todos os códigos foram testados utilizando o GNU Octave em sua versão 3.2.4\footnote{Acredita-se que os códigos sejam compatíveis com o MATLAB embora não tenham sido testados nesse ambiente.} e encontram-se disponíveis em \url{https://github.com/r-gaia-cs/mt404-2012s2}.
-%\lstinputlisting[style=codes, caption={Produto de matrizes}, label={code:mt404_p02}]{src/mt404_p02.m}
+\lstinputlisting[style=codes, caption={Produto de matrizes}, label={code:mt404_p02}]{src/mt404_p02.m}
 \end{document}
