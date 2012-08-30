@@ -1,5 +1,3 @@
-% mt404_p02 Projeto 02 de MT404 2012s2
-%
 % Copyright (C) 2012 Raniere Silva <r.gaia.cs@gmail.com>
 % 
 % This program is free software; you can redistribute it and/or modify
@@ -15,12 +13,15 @@
 % You should have received a copy of the GNU General Public License
 % along with Octave; see the file COPYING.  If not, see
 % <http://www.gnu.org/licenses/>.
+
+% usage: t = mt404_p02();
 %
-function t = mt404_p02 ()
+% Benchmark do produto de uma matriz por um vetor.
+function t = mt404_p02()
+    % valores das dimensoes a serem utilizadas para teste.
     dim = [500, 1000, 2000, 5000, 6000];
 
-    % t(1,:) corresponde ao tempo sem nenhum aproveitamento da 
-    % estrutura especial.
+    % t(1,:) corresponde ao tempo utilizando [].
     %
     % t(2,:) corresponde ao tempo utilizando sparse.
     %
@@ -43,24 +44,42 @@ function t = mt404_p02 ()
         t(2,i) = toc;
 
         % Utilizando spdiags
-        Aux = spdiags(A);
+        [Aux, d] = spdiags(A);
         tic;
-        prod_matrix_spdiags(Aux, x, 2, 2);
+        prod_matrix_spdiags(Aux, x, abs(min(d)), abs(max(d)));
         t(3,i) = toc;
     end
 end
 
-function [ y ] = prod_matrix_spdiags (A, x, p, q)
-    % $A$ \'{e} uma matriz banda com banda superior com aplitude $q$ e banda inferior com amplitude $p$.
+% usage: y = prod_matrix_spdiags(A, x, p, q)
+%
+% Calcula o produto de uma matriz A, cujas diagonais sao armazenadas em
+% colunas, por um vetor x.
+%
+% q eh a amplitudeda banda superior e p eh a amplitude da banda
+% inferior.
+function y = prod_matrix_spdiags(A, x, p, q)
+    % $A$ \'{e} uma matriz banda com banda superior com aplitude $q$ 
+    % e banda inferior com amplitude $p$.
     % $x$ \'{e} um vetor
     [m, n] = size(A);
     y = zeros(m,1);
     % i corresponde as linhas
     for i = 1:m
         % j corresponde as colunas
-        for j = max(i-q, 1):min(i+p,m)
-            % A(i,j) = (spdiags(A))(j, j - 1 + q + 1)
-            y(i) = y(i) + A(j, j - i + p + 1) * x(j);
+        for j = max(i-p,1):min(i+q,m)
+            y(i) = y(i) + spdiags2matrix(A, i, j, p, q) * x(j);
         end
     end
+end
+
+% usage: a = spdiags2matrix(B, i, j, p, q)
+%
+% Retorna o elemento A(i,j) tal que B = spdiags(A).
+%
+% q eh a amplitudeda banda superior e p eh a amplitude da banda
+% inferior da matriz A.
+function a = spdiags2matrix(B, i, j, p, q)
+    % Get element A(i,j) when B = spdiags(A)
+    a = B(j, j - i + p + 1);
 end

@@ -68,11 +68,13 @@
 
 % C\'{o}digos
 \usepackage{listings} % Pacote para c\'{o}digos
+\usepackage{textcomp} % Para aspas simples
 \renewcommand{\lstlistingname}{C\'{o}digo}
 \lstdefinestyle{codes}{ %
 language=Octave,                % the language of the code
 frame=single,                   % frame around the code
 basicstyle=\ttfamily\small,     % the size of the fonts that are used for the code
+columns=flexible,               % Correct unexpected spaces in strings when copy-and-past
 numbers=left,                   % where to put the line-numbers
 numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
 stepnumber=5,                   % the step between two line-numbers.
@@ -88,12 +90,14 @@ breaklines=true,                % sets automatic line breaking
 breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
 % caption={\texttt{\lstname}},    % show the filename of files included with \lstinputlisting;
 % escapeinside={\%*}{*)},         % if you want to add a comment within your code
-% morekeywords={#}                % if you want to add more keywords to the set
+% morekeywords={#},               % if you want to add more keywords to the set
+upquote=true,                   % Correct single quote
 }
 \lstdefinestyle{outputs}{ %
 language=Octave,                % the language of the code
 % frame=single,                   % frame around the code
 basicstyle=\ttfamily\small,     % the size of the fonts that are used for the code
+columns=flexible,               % Correct unexpected spaces in strings when copy-and-past
 % numbers=left,                   % where to put the line-numbers
 % numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
 % stepnumber=5,                   % the step between two line-numbers.
@@ -110,6 +114,7 @@ breakatwhitespace=false,        % sets if automatic breaks should only happen at
 % caption={\texttt{\lstname}},    % show the filename of files included with \lstinputlisting;
 % escapeinside={\%*}{*)},         % if you want to add a comment within your code
 % morekeywords={#}                % if you want to add more keywords to the set
+upquote=true,                   % Correct single quote
 }
 
 % Novos comandos
