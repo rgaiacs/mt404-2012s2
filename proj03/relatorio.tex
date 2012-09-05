@@ -12,9 +12,15 @@
 % 
 % Copyright (c) 2012, Raniere Silva. All rights reserved.
 % 
-% Except otherwise noted, this work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/3.0/ or send a letter to Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
+% Except otherwise noted, this work is licensed under the Creative
+% Commons Attribution-ShareAlike 3.0 Unported License. To view a copy of
+% this license, visit http://creativecommons.org/licenses/by-sa/3.0/ or
+% send a letter to Creative Commons, 444 Castro Street, Suite 900,
+% Mountain View, California, 94041, USA.
 %
-% This work is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+% This work is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 %
 \documentclass[12pt,a4paper]{article}
 \input{../packages.tex}
@@ -23,20 +29,86 @@
 \author{Raniere Silva \\ ra092767}
 \maketitle
 \begin{abstract}
-    Este \'{e} o projeto no.3 da disciplina MT404 - M\'{e}todos Computacionais de \'{A}lgebra Linear. Neste projeto 
+    Este \'{e} o projeto no.3 da disciplina MT404 - M\'{e}todos Computacionais
+    de \'{A}lgebra Linear. Neste projeto 
 \end{abstract}
 \tableofcontents
 \lstlistoflistings
 \section*{Licen\c{c}a}
-Salvo disposi\c{c}\~{a}o em contr\'{a}rio, este trabalho foi licenciado com uma Licen\c{c}a Creative Commons Atribui\c{c}\~{a}o - CompartilhaIgual 3.0 N\~{a}o Adaptada. Para ver uma c\'{o}pia desta licen\c{c}a, visite http://creativecommons.org/licenses/by-sa/3.0/.
+Salvo disposi\c{c}\~{a}o em contr\'{a}rio, este trabalho foi licenciado com uma
+Licen\c{c}a Creative Commons Atribui\c{c}\~{a}o - CompartilhaIgual 3.0 N\~{a}o
+Adaptada. Para ver uma c\'{o}pia desta licen\c{c}a, visite
+http://creativecommons.org/licenses/by-sa/3.0/.
 \begin{center}
     \includegraphics{../figuras/cc-by-sa.png}
 \end{center}
 \newpage
 \section{An\'{a}lise de sensibilidade}
+Seja $A \in \mathbb{R}^{n \times n}$ e $x, b \in \mathbb{R}^n$. Considere o
+sistema linear $A x = b$ e a solu\c{c}\~{a}o $\hat{x}$ obtida atrav\'{e}s de
+m\'{e}todos num\'{e}ricos.
+
+\begin{defi}
+    O res\'{i}duo de $\hat{x}$ em rela\c{c}\~{a}o a $A x = b$ \'{e} o vetor $A
+    \hat{x} - b$.
+\end{defi}
+
+\section{Experimentos Computacionais}
+O experimento computacional desta atividade consistiu em utilizar a
+fun\c{c}\~{a}o nativa do GNU Octave para resolver sistemas lineares e calcular o
+res\'{i}duo, o n\'{u}mero de condi\c{c}\~{a}o da matriz e um limitante para o
+erro relativo da solu\c{c}\~{a}o calculada.
+
+Para a matrix $A \in \mathbb{R}^{n \times n}$ dada por
+\begin{align*}
+    a_{ii} &= 0.5 + (0.1 / n) i & i &= 1, \ldots, n - 1, \\
+    a_{nn} &= 0.6, \\
+    a_{i,i+1} &= -1 & i &= 1, \ldots, n - 1
+\end{align*}
+obtivemos a sa\'{i}da que corresponde a Tabela~
+\lstinputlisting[style=outputs, nolol=true]{src/mt404_p03q01.out}
+\begin{table}[!htb]
+    \centering
+    \caption{Resultados referentes a matriz de banda.}
+    \label{tab:res_matriz_banda}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        $n$ & Lado Direito & $\kappa(A)$ & Res\'{i}duo & Limitante do erro \\ \hline
+        10 & $b$ & 1.402391e+03 & 5.684342e-14 & 7.971673e-11 \\ \hline
+        10 & $\tilde{b}$ & 1.402391e+03 & 0.000000e+00 & 0.000000e+00 \\
+        \hline
+        100 & $b$ & 3.839762e+26 & 2.684355e+08 & 1.030728e+35 \\ \hline
+        100 & $\tilde{b}$ & 3.839762e+26 & 1.639128e-10 & 1.048977e+17
+        \\ \hline
+    \end{tabular}
+\end{table}
+
+
+Para a matriz de Hilbert
+\lstinputlisting[style=outputs, nolol=true]{src/mt404_p03q02.out}
+\begin{table}[!htb]
+    \centering
+    \caption{Resultados referentes a matriz de Hilbert.}
+    \label{tab:res_matriz_banda}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        $n$ & $\kappa(A)$ & Res\'{i}duo & Limitante do erro \\ \hline
+        5 & 4.766073e+05 & 2.220446e-16 & 4.634806e-11 \\ \hline
+        10 & 1.602500e+13 & 2.220446e-16 & 1.214853e-03 \\ \hline
+        50 & 1.017747e+19 & 3.552714e-15 & 8.036452e+03 \\ \hline
+        100 & 8.156265e+19 & 6.217249e-15 & 9.775562e+04 \\ \hline
+        1000 & 1.926857e+21 & 4.085621e-14 & 1.051692e+07 \\ \hline
+    \end{tabular}
+\end{table}
 
 \section{C\'{o}digos}
-A seguir encontra-se os códigos desenvolvidos neste projeto. Todos os códigos foram testados utilizando o GNU Octave em sua versão 3.2.4\footnote{Acredita-se que os códigos sejam compatíveis com o MATLAB embora não tenham sido testados nesse ambiente.} e encontram-se disponíveis em \url{https://github.com/r-gaia-cs/mt404-2012s2}.
-\lstinputlisting[style=codes, caption={An\'{a}lise de sensibilidade}, label={code:mt404_p03q01}]{src/mt404_p03q01.m}
-\lstinputlisting[style=codes, caption={An\'{a}lise de sensibilidade para matriz de Hilbert}, label={code:mt404_p03q01}]{src/mt404_p03q01.m}
+A seguir encontra-se os códigos desenvolvidos neste projeto. Todos os códigos
+foram testados utilizando o GNU Octave em sua versão 3.2.4\footnote{Acredita-se
+que os códigos sejam compatíveis com o MATLAB embora não tenham sido testados
+nesse ambiente.} e encontram-se disponíveis em
+\url{https://github.com/r-gaia-cs/mt404-2012s2}.
+\lstinputlisting[style=codes, caption={An\'{a}lise de sensibilidade},
+label={code:mt404_p03q01}]{src/mt404_p03q01.m}
+\lstinputlisting[style=codes, caption={An\'{a}lise de sensibilidade para matriz
+de Hilbert}, label={code:mt404_p03q01}]{src/mt404_p03q01.m}
 \end{document}

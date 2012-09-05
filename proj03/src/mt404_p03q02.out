@@ -1,0 +1,30 @@
+octave:6> mt404_p03q02
+[5, 5] = size(H)
+Numero de condicao de $A$: 4.766073e+05
+Residuo: 2.220446e-16
+Limite superior: 4.634806e-11
+[10, 10] = size(H)
+Numero de condicao de $A$: 1.602500e+13
+Residuo: 2.220446e-16
+Limite superior: 1.214853e-03
+[50, 50] = size(H)
+Numero de condicao de $A$: 1.017747e+19
+warning: matrix singular to machine precision, rcond = 3.65356e-21
+warning: attempting to find minimum norm solution
+warning: dgelsd: rank deficient 50x50 matrix, rank = 17
+Residuo: 3.552714e-15
+Limite superior: 8.036452e+03
+[100, 100] = size(H)
+Numero de condicao de $A$: 8.156265e+19
+warning: matrix singular to machine precision, rcond = 4.56898e-21
+warning: attempting to find minimum norm solution
+warning: dgelsd: rank deficient 100x100 matrix, rank = 20
+Residuo: 6.217249e-15
+Limite superior: 9.775562e+04
+[1000, 1000] = size(H)
+Numero de condicao de $A$: 1.926857e+21
+warning: matrix singular to machine precision, rcond = 4.47808e-23
+warning: attempting to find minimum norm solution
+warning: dgelsd: rank deficient 1000x1000 matrix, rank = 61
+Residuo: 4.085621e-14
+Limite superior: 1.051692e+07

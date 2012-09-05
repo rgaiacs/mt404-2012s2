@@ -16,16 +16,17 @@
 
 % usage: mt404_p03q02();
 function mt404_p03q02()
-    n = [5, 10, 50, 100, 1000];
-    for i = 1:length(n)
-        H = hilb(n(i));
+    for n = [5, 10, 50, 100, 1000]
+        H = hilb(n);
+        printf('[%d, %d] = size(H)\n', size(H, 1), size(H, 2));
+
         % N\'{u}mero de condi\c{c}\~{a}o de $H$.
         k = cond(H);
         printf('Numero de condicao de $A$: %e\n', k);
 
         % $b$ tal que a solucao do sistema tenha todas as componentes
         % iguais a 1.
-        b = H * ones(n(i), 1);
+        b = H * ones(n, 1);
         x = H \ b;
         % Calculo do res\'{i}duo.
         r = norm(b - H * x, inf);

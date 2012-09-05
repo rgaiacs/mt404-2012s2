@@ -1,0 +1,14 @@
+octave:2> mt404_p03q01
+[10, 10] = size(A)
+Numero de condicao de $A$: 1.402391e+03
+Residuo: 5.684342e-14
+Limite superior: 7.971673e-11
+Residuo: 0.000000e+00
+Limite superior: 0.000000e+00
+[100, 100] = size(A)
+warning: inverse: matrix singular to machine precision, rcond = 5.16256e-36
+Numero de condicao de $A$: 3.839762e+26
+Residuo: 2.684355e+08
+Limite superior: 1.030728e+35
+Residuo: 1.639128e-10
+Limite superior: 1.048977e+17
