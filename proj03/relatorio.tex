@@ -30,7 +30,11 @@
 \maketitle
 \begin{abstract}
     Este \'{e} o projeto no.3 da disciplina MT404 - M\'{e}todos Computacionais
-    de \'{A}lgebra Linear. Neste projeto 
+    de \'{A}lgebra Linear. Neste projeto abordamos um pouco sobre erros
+    num\'{e}ricos ao resolver sistemas lineares e sobre a estabilidade
+    num\'{e}rica inerente a um sistema. Foram feitos alguns experimentos
+    computacionais para verificar os erros num\'{e}ricos e a estabilidade do
+    sistema linear.
 \end{abstract}
 \tableofcontents
 \lstlistoflistings
@@ -45,19 +49,58 @@ http://creativecommons.org/licenses/by-sa/3.0/.
 \newpage
 \section{An\'{a}lise de sensibilidade}
 Seja $A \in \mathbb{R}^{n \times n}$ e $x, b \in \mathbb{R}^n$. Considere o
-sistema linear $A x = b$ e a solu\c{c}\~{a}o $\hat{x}$ obtida atrav\'{e}s de
-m\'{e}todos num\'{e}ricos.
-
+sistema linear $A x = b$, $x^*$ a solu\c{c}\~{a}o anal\'{i}tica para o sistema
+linear e $\hat{x}$ a solu\c{c}\~{a}o obtida atrav\'{e}s de m\'{e}todos
+num\'{e}ricos.
 \begin{defi}
-    O res\'{i}duo de $\hat{x}$ em rela\c{c}\~{a}o a $A x = b$ \'{e} o vetor $A
-    \hat{x} - b$.
+    O erro relativo, $e$, do sistema linear $A x = b$ em rela\c{c}\~{a}o a
+    solu\c{c}\~{a}o $\hat{x}$ \'{e} dado por
+    \begin{align*}
+        e &= \frac{\| x^* - \hat{x} \|}{\| \hat{x} \|}.
+    \end{align*}
 \end{defi}
+\begin{defi}
+    O res\'{i}duo relativo, $r$, do sistema linear $A x = b$ em rela\c{c}\~{a}o
+    a
+    solu\c{c}\~{a}o $\hat{x}$ \'{e} dado por
+    \begin{align*}
+        r &= \frac{\| b - A \hat{x} \|}{\| \hat{b} \|}.
+    \end{align*}
+\end{defi}
+\begin{defi}
+    O n\'{u}mero de condi\c{c}\~{a}o de $A$, $\kappa(A)$, \'{e} dado por
+    \begin{align*}
+        \kappa(A) &= \| A \| \| A^{-1} \|.
+    \end{align*}
+\end{defi}
+
+Apenas para um grupo bastante pequeno de sistemas lineares de pequena ordem
+\'{e} poss\'{i}vel conhecer o erro relativo cometido ao resolver o sistema
+linear por m\'{e}todos num\'{e}ricos pois para a grande maioria \'{e} muito
+custo, ou mesmo imposs\'{i}vel, obter $x^*$.
+
+Infelizmente, o res\'{i}duo relativo ser pequeno n\~{a}o garante que a
+solu\c{c}\~{a}o encontrada $\hat{x}$ esteja pr\'{o}ximo de
+$x^*$.\footnote{Em quase todos os livros de \'{A}lgebra Linear Num\'{e}rica
+existe um exemplo num\'{e}rico mostrando esse fato.} Por causa disso, seria
+interessante conhecer um limitante para o erro relativo em fun\c{c}\~{a}o do
+res\'{i}duo relativo de forma que por esse limitante poderia ser estimado o
+quanto $\hat{x}$ estaria pr\'{o}ximo de $x^*$. A proposi\c{c}\~{a}o a seguir
+apresenta essa rela\c{c}\~{a}o.
+\begin{prop}
+    A seguinte rela\c{c}\~{a}o \'{e} v\'{a}lida para qualquer sistema linear $A
+    x = b$:
+    \begin{align*}
+        \frac{\| x^* - \hat{x} \|}{\| \hat{x} \|} &\leq \kappa(A)
+        \frac{\| b - A \hat{x} \|}{\| b \|}.
+    \end{align*}
+\end{prop}
 
 \section{Experimentos Computacionais}
 O experimento computacional desta atividade consistiu em utilizar a
 fun\c{c}\~{a}o nativa do GNU Octave para resolver sistemas lineares e calcular o
-res\'{i}duo, o n\'{u}mero de condi\c{c}\~{a}o da matriz e um limitante para o
-erro relativo da solu\c{c}\~{a}o calculada.
+res\'{i}duo relativo, o n\'{u}mero de condi\c{c}\~{a}o da matriz e um limitante
+para o erro relativo da solu\c{c}\~{a}o calculada.
 
 Para a matrix $A \in \mathbb{R}^{n \times n}$ dada por
 \begin{align*}
@@ -65,7 +108,8 @@ Para a matrix $A \in \mathbb{R}^{n \times n}$ dada por
     a_{nn} &= 0.6, \\
     a_{i,i+1} &= -1 & i &= 1, \ldots, n - 1
 \end{align*}
-obtivemos a sa\'{i}da que corresponde a Tabela~
+obtivemos a sa\'{i}da abaixo que corresponde a
+Tabela~\ref{tab:res_matriz_banda}.
 \lstinputlisting[style=outputs, nolol=true]{src/mt404_p03q01.out}
 \begin{table}[!htb]
     \centering
@@ -83,13 +127,28 @@ obtivemos a sa\'{i}da que corresponde a Tabela~
     \end{tabular}
 \end{table}
 
+Pela Tabela~\ref{tab:res_matriz_banda} verificamos que o n\'{u}mero de
+condi\c{c}\~{a}o tanto para $n = 10$ como para $n = 100$ \'{e} ``elevado'',
+sendo para $n = 100$ muito grande (da ordem de $10^{26}$).
 
-Para a matriz de Hilbert
+Para $n = 10$ o res\'{i}duo obtido quando $b$ \'{e} o vetor de uns foi da ordem
+de $10^{-14}$ que est\'{a} pr\'{o}ximo do limitante que \'{e} da ordem de
+$10^{-11}$. Quando $b$ foi construido tal que a solu\c{c}\~{a}o fosse o
+vetor de uns ``n\~{a}o ocorreu erros num\'{e}ricos'' pois tanto o res\'{i}duo
+como o limitante foram zero.
+
+J\'{a} para $n = 100$, em ambos os casos, $b$ como o vetor de uns e $b$
+constru\'{i}do de modo que a solu\c{c}\~{a}o fosse o vetor de uns, o res\'{i}duo
+foi muito menor, diferen\c{c}a superior a $10^{20}$, que o limitante do erro.
+Esse fato est\'{a} relacionado com o n\'{u}mero de condi\c{c}\~{a}o elevado.
+
+Para a matriz de Hilbert obtivemos a sa\'{i}da abaixo que corresponde a
+Tabela~\ref{tab:res_matriz_hilbert}.
 \lstinputlisting[style=outputs, nolol=true]{src/mt404_p03q02.out}
 \begin{table}[!htb]
     \centering
     \caption{Resultados referentes a matriz de Hilbert.}
-    \label{tab:res_matriz_banda}
+    \label{tab:res_matriz_hilbert}
     \begin{tabular}{|c|c|c|c|}
         \hline
         $n$ & $\kappa(A)$ & Res\'{i}duo & Limitante do erro \\ \hline
@@ -100,6 +159,24 @@ Para a matriz de Hilbert
         1000 & 1.926857e+21 & 4.085621e-14 & 1.051692e+07 \\ \hline
     \end{tabular}
 \end{table}
+
+Pela Tabela~\ref{tab:res_matriz_hilbert} observa-se que o n\'{u}mero de
+condi\c{c}\~{a}o da matriz de Hilbert \'{e} elevado e aumenta para matrizes de
+ordem maiores, para $n = 5$ \'{e} da ordem
+de $10^5$ e para $n = 1000$ \'{e} da ordem de $10^{21}$. \'{E} importante notar
+que para dimens\~{o}es maiores o aumento no n\'{u}mero de condi\c{c}\~{a}o \'{e}
+mais percept\'{i}vel, i.e., de $n = 5$ para $n = 10$ o n\'{u}mero de
+condi\c{c}\~{a}o aumenta da ordem de $10^5$ para $10^{13}$ enquanto que de
+$n = 50$ para $n = 100$ o n\'{u}mero de condi\c{c}\~{a}o aumenta mas sem mudar a
+ordem de grandeza.
+
+Quanto ao res\'{i}duo para $b$ constru\'{i}do de modo que a solu\c{c}\~{a}o do
+sistema linear seja o vetor de uns temos que ele sempre foi pequeno, da ordem de
+$10^{-15}$, para todas as dimens\~{o}es testadas enquanto que o limitante do erro
+aumentou significativamente com o aumento da dimens\~{a}o, para $n = 5$ o
+limitante \'{e} da ordem de $10^{-11}$ enquanto que para $n = 1000$ \'{e} da
+ordem de $10^7$. Essa varia\c{c}\~{a}o no limitante \'{e} decorrente da
+varia\c{c}\~{a}o observada anteriormente para o n\'{u}mero de condi\c{c}\~{a}o.
 
 \section{C\'{o}digos}
 A seguir encontra-se os códigos desenvolvidos neste projeto. Todos os códigos
