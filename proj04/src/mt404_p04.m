@@ -14,53 +14,43 @@
 % along with Octave; see the file COPYING.  If not, see
 % <http://www.gnu.org/licenses/>.
 
-function [T, dim, dens, thresh] = mt404_p04(p=0, g=0)
+function mt404_p04(f_name='dim', print=0, group=1, dim=[100, 200, 400], dens=[1, .75, .5, .25, .1], thresh=[1, .75, .5, .25, .1])
     % Projeto 04 de MT404
     %
-    % :param p: 1 to print table.
+    % :param f_name: name of the file to save the information.
     %
-    % :type p: boolean; default 0.
+    % :type f_name: string; default 'benchmark.csv'.
     %
-    % :param g: 1 to generate graphics.
+    % :param print: 1 to generate graphics.
     %
-    % :type g: boolean; default 0.
+    % :type print: boolean; default 0.
     %
-    % :return T: information about the test.
+    % :param group: 1 to group graphics of same dimension.
     %
-    % :rtype T: list/matrix.
+    % :type group: boolean; default 1.
     %
-    % :return dim: dimension to be test.
+    % :param dim: dimension to be test.
     %
-    % :rtype dim: list/vector.
+    % :type dim: list/vector.
     %
-    % :return dens: density to be test.
+    % :param dens: density to be test.
     %
-    % :rtype dens: list/vector.
+    % :type dens: list/vector.
     %
-    % :return thresh: thresh value to be test.
+    % :param thresh: thresh value to be test.
     %
-    % :rtype thresh: list/vector.
+    % :type thresh: list/vector.
     %
     % ..  note::
     %
-    %     To filter the information about the test by one column, use: ::
-    %
-    %         > T(T(:, i) == n, :)
-    %
-    %     To sort the information about the test by one column, use: ::
-    %
-    %         > [s, s] = sort(T(:, i));
-    %         > T(s, :);
-    dim = [100, 200, 500, 1000];
-    dens = [1, .9, .7, .5, .4, .2, .1];
-    thresh = [1, .9, .7, .5, .4, .2, .1, .01, .001];
-    % dim = [100, 150, 300];
-    % dens = [1, .9, .1];
-    % thresh = [.8, .4, .2];
-    T = test_lu_thresh(dim, dens, thresh, p, g);
+    %     The information is save in a cvs file.
+    T = test_lu_thresh(dim, dens, thresh, print, group, f_name);
+    printf("Save information to %s\n", strcat(f_name, '.csv'));
+    fflush(stdout);
+    csvwrite(strcat(f_name, 'csv'), T);
 end
 
-function T = test_lu_thresh(dim, dens, thresh, p=0, g=0, v=1)
+function T = test_lu_thresh(dim, dens, thresh, print=0, group=1, f_name='dim', v=1)
     % Test LU factorization option THRESH
     %
     % :param dim: dimension to be test.
@@ -75,17 +65,21 @@ function T = test_lu_thresh(dim, dens, thresh, p=0, g=0, v=1)
     %
     % :type thresh: list/vector.
     %
-    % :param p: 1 to print table.
+    % :param print: 1 to generate graphics.
     %
-    % :type p: boolean; default 0.
+    % :type print: boolean; default 0.
     %
-    % :param g: 1 to generate graphics.
+    % :param group: 1 to group graphics of same dimension.
     %
-    % :type g: boolean; default 0.
+    % :type group: boolean; default 1.
     %
-    % :type v: 1 to print the log of execution.
+    % :param f_name: prefix of the name of figures to save.
     %
-    % :type g: boolean; default 1.
+    % :type f_name: string; default ''.
+    %
+    % :param v: 1 to print the log of execution.
+    %
+    % :type v: boolean; default 1.
     %
     % :return T: information about the test.
     %
@@ -108,13 +102,13 @@ function T = test_lu_thresh(dim, dens, thresh, p=0, g=0, v=1)
     T = zeros(length(dim) * length(dens) * length(thresh), 8);
     c = 1;
     for n = dim
-        for d = dens
-            A = sprand(n, n, d);
+        for d_i = 1:length(dens)
+            A = sprand(n, n, dens(d_i));
             s = rand(n, 1);
             b = A * s;
             for t_i = 1:length(thresh)
                 if v
-                    printf("Testing n = %d, d = %f, thresh = %f\n", n, d, \
+                    printf("Testing n = %d, d = %f, thresh = %f\n", n, dens(d_i), \
                             thresh(t_i));
                     fflush(stdout);
                 end
@@ -126,51 +120,42 @@ function T = test_lu_thresh(dim, dens, thresh, p=0, g=0, v=1)
                 t = toc();
                 erro = norm(x - s, inf) / norm(x, inf);
                 
-                T(c,:) = [n, thresh(t_i), d, nnz(A) / n^2, nnz(L) / n^2,\
+                T(c,:) = [n, thresh(t_i), dens(d_i), nnz(A) / n^2, nnz(L) / n^2,\
                         nnz(U) / n^2, t, erro];
                 c = c + 1;
 
                 % Ilustration.
-                if g
-                    subplot(length(thresh), 4, t_i * 4 - 3);
-                    text(0, .5, sprintf("thresh = %f\ntempo = %f\nerro rel. = %f", thresh(t_i), t, erro))
-                    axis([0 1 0 1]);
-                    axis("off");
-                    subplot(length(thresh), 4, t_i * 4 - 2);
-                    axis("on");
-                    spy(A);
-                    title(sprintf("spy(A), densidade = %f", nnz(A) / n^2));
-                    subplot(length(thresh), 4, t_i * 4 - 1);
-                    spy(L);
-                    title(sprintf("spy(L), densidade = %f", nnz(L) / n^2));
-                    subplot(length(thresh), 4, t_i * 4);
-                    spy(U);
-                    title(sprintf("spy(U), densidade = %f", nnz(U) / n^2));
+                if print
+                    if group
+                        subplot(length(dens), length(thresh), d_i * length(dens) - length(thresh) + t_i);
+                        hold on;
+                        spy(L, 'sb');
+                        spy(U, 'sb');
+                        spy(A, 'sm');
+                        title(sprintf("densidade = %f\nthresh = %f", nnz(A) / n^2, thresh(t_i)));
+                    else
+                        if v
+                            printf("Save graphic at %s\n",
+                            strcat(f_name, mat2str(n), '-', mat2str(d_i), '-', mat2str(t_i), '.png'));
+                            fflush(stdout);
+                        end
+                        spy(L, 'sb');
+                        spy(U, 'sb');
+                        spy(A, 'sm');
+                        title(sprintf("densidade = %f\nthresh = %f", nnz(A) / n^2, thresh(t_i)));
+%                        print(strcat(f_name, mat2str(n), '-', mat2str(d_i), '-', mat2str(t_i), '.png'), '-dpng');
+                        clf;
+                    end
                 end
-            end
-            if g
-                if v
-                    printf("Save graphic at %s\n", strcat('../figure/dim', mat2str(n), 'den', mat2str(d, 2), '.png'));
-                    fflush(stdout);
-                end
-                print(strcat('../figure/dim', mat2str(n), 'den', mat2str(d, 2), '.png'), '-dpng' );
-                clf;
             end
         end
+        if print && group
+            if v
+                printf("Save graphic at %s\n", strcat(f_name, mat2str(n), '.png'));
+                fflush(stdout);
+            end
+            print(strcat(f_name, mat2str(n), '.png'), '-dpng', '-S3000,3000');
+            clf;
+        end
     end
-    if p
-        print_table(T);
-    end
-end
-
-function print_table(T)
-    % Print Table.
-    %
-    % :param T: The table to be print.
-    %
-    % type T: matrix.
-    printf("|dimensao    |thresh      |densidade A |densidade L |densidade U |precisao    |tempo       |\n");  
-
-    printf("|%e|%e|%e|%e|%e|\n", dim, nnz(A)/dim^2,
-        nnz(L)/dim^2, nnz(U)/dim^2, thresh(t_i));
 end
