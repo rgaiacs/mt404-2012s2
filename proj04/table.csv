@@ -1,0 +1,23 @@
+\begin{table}[htb]
+\caption{Informações sobre erro relativo e tempo para resolver sistema linear de
+dimensão 400.}
+\label{tab:info400}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Densidade & \multicolumn{2}{|c|}{0,5} & \multicolumn{2}{|c|}{0,25} &
+\multicolumn{2}{|c|}{0,1} \\
+\hline \hline
+$\mathrm{THRESH}$ & Erro rel. & Tempo & Erro rel. & Tempo & Erro rel. & Tempo \\
+\hline
+1    & 1,08E-001 & 8,79E-013 & 9,51E-002 & 1,07E-012 & 9,37E-002 & 2,72E-013 \\
+\hline
+0,75 & 1,02E-001 & 1,08E-012 & 1,17E-001 & 7,07E-013 & 9,04E-002 & 2,93E-013 \\
+\hline
+0,5  & 1,08E-001 & 1,69E-012 & 1,04E-001 & 2,02E-012 & 8,94E-002 & 2,91E-013 \\
+\hline
+0,25 & 1,06E-001 & 1,31E-012 & 1,06E-001 & 2,57E-012 & 9,21E-002 & 6,03E-013 \\
+\hline
+0,1  & 1,13E-001 & 1,79E-012 & 1,03E-001 & 2,85E-012 & 9,56E-002 & 5,91E-013 \\
+\hline
+\end{tabular}
+\end{table}

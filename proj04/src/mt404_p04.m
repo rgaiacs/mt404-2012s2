@@ -145,7 +145,7 @@ function T = test_lu_thresh(dim, dens, thresh, to_print=0, to_group=1, f_name='d
                         spy(A, 'sm');
                         title(sprintf("densidade = %f\nthresh = %f", nnz(A) / n^2, thresh(t_i)));
                         print(strcat(f_name, mat2str(n), '-',
-                        mat2str(d_i), '-', mat2str(t_i), '.png'), '-dpng', '-S800,800');
+                        mat2str(d_i), '-', mat2str(t_i), '.png'), '-dpng', '-S3000,3000');
                         clf;
                     end
                 end

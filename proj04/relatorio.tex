@@ -30,8 +30,15 @@
 \maketitle
 \begin{abstract}
     Este \'{e} o projeto no.4 da disciplina MT404 - M\'{e}todos Computacionais
-    de \'{A}lgebra Linear.
-    sistema linear.
+    de \'{A}lgebra Linear. Neste projeto utilizamos a função interna do GNU
+    Octave para calcular a fatoração LU de uma matriz para investigar a perda de
+    esparsidade no fatores $L$ e $U$ e a possibilidade de minimizar essa perda.
+
+    Verificou-se, computacionalmente, que realmente é possível preservar parte
+    da esparsidade de uma matriz ao calcular a fatoração LU mas existe um limite
+    para essa possibilidade. Também verificou-se que a tentativa de preservar a
+    esparcidade não produz alteração significativa no erro e nem no tempo de
+    execução para a solução de um sistema linear.
 \end{abstract}
 \tableofcontents
 \lstlistoflistings
@@ -76,6 +83,12 @@ fatora\c{c}\~{a}o LU, e.g.,
 Para algumas dessas matrizes, existe uma matriz $P$, $P$ \'{e} uma matriz de
 permuta\c{c}\~{a}o, tal que existe a fatora\c{c}\~{a}o LU de $P A$.
 
+A matriz $P$ pode ser calculada durante a tentativa de calcular a fatoração LU
+de $A$ uma vez que precisa-se permutar duas linhas de $A$ apenas quando
+encontra-se um pivô igual zero. O uso de uma matriz $P$ também pode tornar a
+fatoração LU mais estável. Por esses motivos, todas as implementações da
+fatoração LU utilizam permutações (parcial e/ou total).
+
 No caso de matrizes esparsas, a fatora\c{c}\~{a}o LU pode causar o preenchimento
 da matrizes $L$ e $U$, para evitar isso pode-se relaxar a permuta\c{c}\~{a}o
 $P$.
@@ -84,24 +97,119 @@ $P$.
 O GNU Octave possue implementado, no arquivo lu.oct, uma fun\c{c}\~{a}o para o c\'{a}lculo da
 fatora\c{c}\~{a}o LU de uma matriz. Essa fun\c{c}\~{a}o recebe como
 par\^{a}metro a matriz $A$ que deseja-se calcular os fatores $L$ e $U$ e,
-opcionalmente, um escalar $\mathrm{THRES}$, $0 < \mathrm{THRES} \leq 1$, que
-define uma toler\^{a}ncia na escolha do piv\^{o} a ser utilizado.
+opcionalmente, um escalar $\mathrm{THRESH}$, $0 < \mathrm{THRESH} \leq 1$, que
+define uma toler\^{a}ncia na escolha do piv\^{o} a ser utilizado na tentativa de
+minimizar o preenchimento nas matrizes $L$ e $U$.
 
-O objetivo do par\^{a}metro $\mathrm{THRES}$ \'{e} tentar minimizar o
-preenchimento nas matrizes $L$ e $U$ de matrizes esparsas $A$.
-
-Espera-se que:
+Intuitivamente, propomos as seguintes hipóteses ao manter a dimensão da matriz
+constante:
 \begin{enumerate}
-    \item ao diminuir o valor de $\mathrm{THRES}$ a esparcidade de $L$ e $U$
-        aumente devido a toler\^{a}ncia na escolha do piv\^{o}.
-    \item o tempo para calcular a fatora\c{c}\~{a}o LU com $\mathrm{THRES} = 1$
-        seja inferior ao demais e ao diminuir o valor de $\mathrm{THRES}$ o
-        tempo tamb\'{e}m diminua pela redu\c{c}\~{a}o no n\'{u}mero de
-        opera\c{c}\~{o}es.
+    \item ao diminuir o valor de $\mathrm{THRESH}$ a esparcidade de $L$ e $U$
+        aumenta (devido a toler\^{a}ncia na escolha do piv\^{o});
+        \label{hip:esp}
+    \item o tempo para calcular a fatora\c{c}\~{a}o LU com $\mathrm{THRESH} = 1$
+        seja inferior as demais (devido a realizar apenas uma conparação);
+        \label{hip:thres1}
+    \item ao diminuir o valor de $\mathrm{THRESH}$ o tempo tamb\'{e}m diminua
+        (pela redu\c{c}\~{a}o no n\'{u}mero de opera\c{c}\~{o}es);
+        \label{hip:tempo}
     \item a precis\~{a}o da solu\c{c}\~{a}o seja superior quanto mais alto for o
-        valor de $\mathrm{THRES}$.
+        valor de $\mathrm{THRESH}$ (por questão de estabilidade na escolha do
+        pivô). \label{hip:est}
 \end{enumerate}
 
+Para testar as hipóteses acima, implementou-se as funções definidas no
+Código~\ref{code:mt404_p04} e o script do Código~\ref{code:call_mt404_p04}.
+
+O Código~\ref{code:call_mt404_p04} produz algumas figuras, dentre elas as
+Figuras~\ref{fig:dim100}~\ref{fig:dim200}~e~\ref{fig:dim400} que ilustram o
+prenchimento dos fatores $L$ e $U$ de uma matriz $A$ em função da densidade da
+matriz $A$ e do valor do parâmetro $\mathrm{THRESH}$. Nessas três figuras, a
+matriz $A$ é representada pelos pontos mais claros e as matrizes $L$ e $U$ pelos
+pontos mais escuros\footnote{A representação da matriz $A$ foi sobreposta à
+representação das matrizes $L$ e $U$ de modo que perdeu-se um pouco de
+informação. Entretanto é válido supor que os elementos não nulos em $A$ não
+foram zerados.}. Ainda nessas três figuras, a densidade da matriz $A$ diminui de
+cima para baixo e o valor de $\mathrm{THRESH}$ diminui da esquerda para a
+direita.
+\begin{figure}[!htb]
+    \begin{center}
+        \includegraphics[width=\textwidth, trim=300 300 250 100, clip]{src/dim100.png}
+    \end{center}
+    \caption{Ilustração comparativa da esparcidade dos fatores $L$ e $U$ de uma
+    matriz $A$.}
+    \label{fig:dim100}
+\end{figure}
+\begin{figure}[!htb]
+    \begin{center}
+        \includegraphics[width=\textwidth, trim=300 300 250 100, clip]{src/dim200.png}
+    \end{center}
+    \caption{Ilustração comparativa da esparcidade dos fatores $L$ e $U$ de uma
+    matriz $A$.}
+    \label{fig:dim200}
+\end{figure}
+\begin{figure}[!htb]
+    \begin{center}
+        \includegraphics[width=\textwidth, trim=300 300 250 100, clip]{src/dim400.png}
+    \end{center}
+    \caption{Ilustração comparativa da esparcidade dos fatores $L$ e $U$ de uma
+    matriz $A$.}
+    \label{fig:dim400}
+\end{figure}
+
+Observando a Figura~\ref{fig:dim100}, verificamos o preenchimento nos fatores
+$L$ e $U$. Embora esse fenômeno esteja presente independentente da densidade da
+matriz $A$ e do valor de $\mathrm{THRESH}$ ele é mais visível quando a densidade
+da matriz $A$ é pequena, caso da última linha. Na última linha, observamos que
+ao diminuir o valor de $\mathrm{THRESH}$ a esparcidade dos fatores $L$ e $U$
+aumenta (isso indica que nossa hipótese~\ref{hip:esp} pode estar correta).
+
+Esperava-se que as Figuras~\ref{fig:dim200}~e~\ref{fig:dim400} apresentassem
+comportamento semelhante a da Figura~\ref{fig:dim100} o que, visualmente, não
+ocorre. Para testar se o tamanho das Figuras~\ref{fig:dim200}~e~\ref{fig:dim400}
+está comprometendo a análise do experimento, modificamos o tamanho da figura,
+ver Figura~\ref{fig:zoom}, e verificamos que era o tamanho da imagem que
+impossibilitava de visualizar a perda da esparsidade. 
+\begin{figure}[!htb]
+    \begin{center}
+        \includegraphics[width=.4\textwidth, trim=300 300 250 100,
+        clip]{src/zoom400-3-1.png}
+        \includegraphics[width=.4\textwidth, trim=300 300 250 100,
+        clip]{src/zoom400-3-5.png}
+    \end{center}
+    \caption{Ilustração comparativa da esparcidade dos fatores $L$ e $U$ de uma
+    matriz $A$ de dimensão $400$, densidade próxima de $10\%$ e valor de
+    $\mathrm{THRESH}$ igual a $1$ (esquerda) e de $0,1$ (direita).}
+    \label{fig:zoom}
+\end{figure}
+
+Ao testar vários valores para $\mathrm{THRESH}$, observou-se que ao diminuir o
+valor de $\mathrm{THRESH}$ para menos que $0.1$ a esparsidade dos fatores $L$ e
+$U$ não diminui mui mais que a esparcidade obtida ao utilizar $\mathrm{THRESH} =
+0.1$. Na Figura~\ref{fig:sparse} ilustramos essa observação.
+\begin{figure}[!htb]
+    \begin{center}
+        \includegraphics[width=.3\textwidth, trim=300 300 250 100,
+        clip]{src/sparse400-2-1.png}
+        \includegraphics[width=.3\textwidth, trim=300 300 250 100,
+        clip]{src/sparse400-2-5.png}
+        \includegraphics[width=.3\textwidth, trim=300 300 250 100,
+        clip]{src/sparse400-2-10.png}
+    \end{center}
+    \caption{Ilustração comparativa da esparcidade dos fatores $L$ e $U$ de uma
+    matriz $A$ de dimensão $400$, densidade próxima de $2.5\%$ e valor de
+    $\mathrm{THRESH}$ igual a $1$ (esquerda), $0,1$ (centro) e $0.025$ (direita).}
+    \label{fig:sparse}
+\end{figure}
+
+Em relação ao erro relativo e ao tempo para resolver um sistema linear, estes
+não sofreram grande modificação ao modificar o valor do $\mathrm{THRESH}$
+(nossas hipóteses~\ref{hip:thres1}~-~\ref{hip:est} mostraram-se falsas). A
+Tabela~\ref{tab:info400} representa o comportamento geral do erro e do tempo
+para uma dada dimensão ao variar o valor do $\mathrm{THRESH}$.
+\input{table.csv}
+
+\clearpage
 \section{C\'{o}digos}
 A seguir encontra-se os c\'{o}digos desenvolvidos neste projeto. Todos os c'{o}digos
 foram testados utilizando o GNU Octave em sua vers\~{a}o
@@ -110,4 +218,6 @@ embora n\~{a}o tenham sido testados nesse ambiente.} e encontram-se
 dispon\'{i}veis em \url{https://github.com/r-gaia-cs/mt404-2012s2}.
 \lstinputlisting[style=codes, caption={An\'{a}lise de sensibilidade},
 label={code:mt404_p04}]{src/mt404_p04.m}
+\lstinputlisting[style=codes, caption={Testes executados},
+label={code:call_mt404_p04}]{src/call_mt404_p04.m}
 \end{document}
