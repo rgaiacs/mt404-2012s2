@@ -14,20 +14,20 @@
 % along with Octave; see the file COPYING.  If not, see
 % <http://www.gnu.org/licenses/>.
 
-function mt404_p04(f_name='dim', print=0, group=1, dim=[100, 200, 400], dens=[1, .75, .5, .25, .1], thresh=[1, .75, .5, .25, .1])
+function mt404_p04(f_name='dim', to_print=0, to_group=1, dim=[100, 200, 400], dens=[1, .75, .5, .25, .1], thresh=[1, .75, .5, .25, .1])
     % Projeto 04 de MT404
     %
     % :param f_name: name of the file to save the information.
     %
     % :type f_name: string; default 'benchmark.csv'.
     %
-    % :param print: 1 to generate graphics.
+    % :param to_print: 1 to generate graphics.
     %
-    % :type print: boolean; default 0.
+    % :type to_print: boolean; default 0.
     %
-    % :param group: 1 to group graphics of same dimension.
+    % :param to_group: 1 to group graphics of same dimension.
     %
-    % :type group: boolean; default 1.
+    % :type to_group: boolean; default 1.
     %
     % :param dim: dimension to be test.
     %
@@ -44,13 +44,13 @@ function mt404_p04(f_name='dim', print=0, group=1, dim=[100, 200, 400], dens=[1,
     % ..  note::
     %
     %     The information is save in a cvs file.
-    T = test_lu_thresh(dim, dens, thresh, print, group, f_name);
+    T = test_lu_thresh(dim, dens, thresh, to_print, to_group, f_name);
     printf("Save information to %s\n", strcat(f_name, '.csv'));
     fflush(stdout);
-    csvwrite(strcat(f_name, 'csv'), T);
+    csvwrite(strcat(f_name, '.csv'), T);
 end
 
-function T = test_lu_thresh(dim, dens, thresh, print=0, group=1, f_name='dim', v=1)
+function T = test_lu_thresh(dim, dens, thresh, to_print=0, to_group=1, f_name='dim', v=1)
     % Test LU factorization option THRESH
     %
     % :param dim: dimension to be test.
@@ -65,13 +65,13 @@ function T = test_lu_thresh(dim, dens, thresh, print=0, group=1, f_name='dim', v
     %
     % :type thresh: list/vector.
     %
-    % :param print: 1 to generate graphics.
+    % :param to_print: 1 to generate graphics.
     %
-    % :type print: boolean; default 0.
+    % :type to_print: boolean; default 0.
     %
-    % :param group: 1 to group graphics of same dimension.
+    % :param to_group: 1 to group graphics of same dimension.
     %
-    % :type group: boolean; default 1.
+    % :type to_group: boolean; default 1.
     %
     % :param f_name: prefix of the name of figures to save.
     %
@@ -125,8 +125,8 @@ function T = test_lu_thresh(dim, dens, thresh, print=0, group=1, f_name='dim', v
                 c = c + 1;
 
                 % Ilustration.
-                if print
-                    if group
+                if to_print
+                    if to_group
                         subplot(length(dens), length(thresh), d_i * length(dens) - length(thresh) + t_i);
                         hold on;
                         spy(L, 'sb');
@@ -139,17 +139,19 @@ function T = test_lu_thresh(dim, dens, thresh, print=0, group=1, f_name='dim', v
                             strcat(f_name, mat2str(n), '-', mat2str(d_i), '-', mat2str(t_i), '.png'));
                             fflush(stdout);
                         end
+                        hold on;
                         spy(L, 'sb');
                         spy(U, 'sb');
                         spy(A, 'sm');
                         title(sprintf("densidade = %f\nthresh = %f", nnz(A) / n^2, thresh(t_i)));
-%                        print(strcat(f_name, mat2str(n), '-', mat2str(d_i), '-', mat2str(t_i), '.png'), '-dpng');
+                        print(strcat(f_name, mat2str(n), '-',
+                        mat2str(d_i), '-', mat2str(t_i), '.png'), '-dpng', '-S800,800');
                         clf;
                     end
                 end
             end
         end
-        if print && group
+        if to_print && to_group
             if v
                 printf("Save graphic at %s\n", strcat(f_name, mat2str(n), '.png'));
                 fflush(stdout);
