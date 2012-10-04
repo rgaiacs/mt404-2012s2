@@ -45,8 +45,62 @@ http://creativecommons.org/licenses/by-sa/3.0/.
 \end{center}
 \newpage
 \section{Fatora\c{c}\~{a}o LU}
+A maneira mais elementar de resolver um sistema de equa\c{c}\~{o}es \'{e} \'{e}
+utilizando a elimina\c{c}\~{a}o de Gauss, i.e., em triangularizar o
+sistema, e posteriormente utilizar substitui\c{c}\~{a}o para obter a
+solu\c{c}\~{a}o do sistema.
+
+A Fatora\c{c}\~{a}o LU \'{e} uma vers\~{a}o mais elaborada da elimina\c{c}\~{a}o
+de Gauss e dado o sistema $A x = b$ encontrar matrizes $L$ e $U$, onde $L$ \'{e}
+tringular inferior com diagonal unit\'{a}ria e $U$ triangular superior, tal que
+$A = L U$. A solu\c{c}\~{a}o do sistema linear \'{e} obtida resolvendo dois
+sistemas:
+\begin{align*}
+    L y &= b, \\
+    U x &= y.
+\end{align*}
+
+\'{E} poss\'{i}vel provar que $A \in \mathbb{R}^{n \times n}$ possue
+fatora\c{c}\~{a}o LU se os menores principais de $A$, de ordem $1, 2, \ldots, n
+- 1$, s\~{a}o n\~{a}o nulos. Al\'{e}m disso, se a fatora\c{c}\~{a}o existir e
+$A$ for n\~{a}o singular, ent\~{a}o a fatora\c{c}\~{a}o LU \'{e} \'{u}nica.
+
+Sabe-se que para algumas matrizes n\~{a}o \'{e} poss\'{i}vel obter a
+fatora\c{c}\~{a}o LU, e.g.,
+\begin{align*}
+    A = \begin{bmatrix}
+        0 & 1 \\
+        1 & 0
+    \end{bmatrix}.
+\end{align*}
+Para algumas dessas matrizes, existe uma matriz $P$, $P$ \'{e} uma matriz de
+permuta\c{c}\~{a}o, tal que existe a fatora\c{c}\~{a}o LU de $P A$.
+
+No caso de matrizes esparsas, a fatora\c{c}\~{a}o LU pode causar o preenchimento
+da matrizes $L$ e $U$, para evitar isso pode-se relaxar a permuta\c{c}\~{a}o
+$P$.
 
 \section{Experimentos Computacionais}
+O GNU Octave possue implementado, no arquivo lu.oct, uma fun\c{c}\~{a}o para o c\'{a}lculo da
+fatora\c{c}\~{a}o LU de uma matriz. Essa fun\c{c}\~{a}o recebe como
+par\^{a}metro a matriz $A$ que deseja-se calcular os fatores $L$ e $U$ e,
+opcionalmente, um escalar $\mathrm{THRES}$, $0 < \mathrm{THRES} \leq 1$, que
+define uma toler\^{a}ncia na escolha do piv\^{o} a ser utilizado.
+
+O objetivo do par\^{a}metro $\mathrm{THRES}$ \'{e} tentar minimizar o
+preenchimento nas matrizes $L$ e $U$ de matrizes esparsas $A$.
+
+Espera-se que:
+\begin{enumerate}
+    \item ao diminuir o valor de $\mathrm{THRES}$ a esparcidade de $L$ e $U$
+        aumente devido a toler\^{a}ncia na escolha do piv\^{o}.
+    \item o tempo para calcular a fatora\c{c}\~{a}o LU com $\mathrm{THRES} = 1$
+        seja inferior ao demais e ao diminuir o valor de $\mathrm{THRES}$ o
+        tempo tamb\'{e}m diminua pela redu\c{c}\~{a}o no n\'{u}mero de
+        opera\c{c}\~{o}es.
+    \item a precis\~{a}o da solu\c{c}\~{a}o seja superior quanto mais alto for o
+        valor de $\mathrm{THRES}$.
+\end{enumerate}
 
 \section{C\'{o}digos}
 A seguir encontra-se os c\'{o}digos desenvolvidos neste projeto. Todos os c'{o}digos
