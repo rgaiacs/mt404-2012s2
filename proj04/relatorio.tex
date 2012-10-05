@@ -122,7 +122,7 @@ Para testar as hipóteses acima, implementou-se as funções definidas no
 Código~\ref{code:mt404_p04} e o script do Código~\ref{code:call_mt404_p04}.
 
 O Código~\ref{code:call_mt404_p04} produz algumas figuras, dentre elas as
-Figuras~\ref{fig:dim100}~\ref{fig:dim200}~e~\ref{fig:dim400} que ilustram o
+Figuras~\ref{fig:dim100},~\ref{fig:dim200}~e~\ref{fig:dim400} que ilustram o
 prenchimento dos fatores $L$ e $U$ de uma matriz $A$ em função da densidade da
 matriz $A$ e do valor do parâmetro $\mathrm{THRESH}$. Nessas três figuras, a
 matriz $A$ é representada pelos pontos mais claros e as matrizes $L$ e $U$ pelos
@@ -137,7 +137,7 @@ direita.
         \includegraphics[width=\textwidth, trim=300 300 250 100, clip]{src/dim100.png}
     \end{center}
     \caption{Ilustração comparativa da esparcidade dos fatores $L$ e $U$ de uma
-    matriz $A$.}
+    matriz $A$ de dimensão $100 \times 100$.}
     \label{fig:dim100}
 \end{figure}
 \begin{figure}[!htb]
@@ -145,7 +145,7 @@ direita.
         \includegraphics[width=\textwidth, trim=300 300 250 100, clip]{src/dim200.png}
     \end{center}
     \caption{Ilustração comparativa da esparcidade dos fatores $L$ e $U$ de uma
-    matriz $A$.}
+    matriz $A$ de dimensão $200 \times 200$.}
     \label{fig:dim200}
 \end{figure}
 \begin{figure}[!htb]
@@ -153,7 +153,7 @@ direita.
         \includegraphics[width=\textwidth, trim=300 300 250 100, clip]{src/dim400.png}
     \end{center}
     \caption{Ilustração comparativa da esparcidade dos fatores $L$ e $U$ de uma
-    matriz $A$.}
+    matriz $A$ de dimensão $400 \times 400$.}
     \label{fig:dim400}
 \end{figure}
 
@@ -178,7 +178,7 @@ impossibilitava de visualizar a perda da esparsidade.
         clip]{src/zoom400-3-5.png}
     \end{center}
     \caption{Ilustração comparativa da esparcidade dos fatores $L$ e $U$ de uma
-    matriz $A$ de dimensão $400$, densidade próxima de $10\%$ e valor de
+    matriz $A$ de dimensão $400 \times 400$, densidade próxima de $10\%$ e valor de
     $\mathrm{THRESH}$ igual a $1$ (esquerda) e de $0,1$ (direita).}
     \label{fig:zoom}
 \end{figure}
@@ -197,14 +197,14 @@ $U$ não diminui mui mais que a esparcidade obtida ao utilizar $\mathrm{THRESH} 
         clip]{src/sparse400-2-10.png}
     \end{center}
     \caption{Ilustração comparativa da esparcidade dos fatores $L$ e $U$ de uma
-    matriz $A$ de dimensão $400$, densidade próxima de $2.5\%$ e valor de
+    matriz $A$ de dimensão $400 \times 400$, densidade próxima de $2.5\%$ e valor de
     $\mathrm{THRESH}$ igual a $1$ (esquerda), $0,1$ (centro) e $0.025$ (direita).}
     \label{fig:sparse}
 \end{figure}
 
 Em relação ao erro relativo e ao tempo para resolver um sistema linear, estes
 não sofreram grande modificação ao modificar o valor do $\mathrm{THRESH}$
-(nossas hipóteses~\ref{hip:thres1}~-~\ref{hip:est} mostraram-se falsas). A
+(nossas hipóteses~\ref{hip:thres1}--\ref{hip:est} mostraram-se falsas). A
 Tabela~\ref{tab:info400} representa o comportamento geral do erro e do tempo
 para uma dada dimensão ao variar o valor do $\mathrm{THRESH}$.
 \input{table.csv}

@@ -1,6 +1,6 @@
 \begin{table}[htb]
-\caption{Informações sobre erro relativo e tempo para resolver sistema linear de
-dimensão 400.}
+\caption{Informações sobre erro relativo e tempo para resolver sistema linear $A
+x = b$ em que a dimensão de $A$ é $400 \times 400$.}
 \label{tab:info400}
 \begin{tabular}{|c|c|c|c|c|c|c|}
 \hline
