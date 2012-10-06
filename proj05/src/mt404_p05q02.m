@@ -16,4 +16,23 @@
 
 function mt404_p05q02()
     % Projeto 05, questao 02, de MT404
+    n = 0;
+    is_singular = 0;
+    while !is_singular
+        n = n + 1;
+
+        % -- Function File:  hilb (N)
+        %     Return the Hilbert matrix of order N.  The i, j element of a
+        %     Hilbert matrix is defined as
+        %
+        %          H (i, j) = 1 / (i + j - 1)
+        H = hilb(n);
+        try
+            chol(H);
+        catch
+            is_singular = 1;
+        end
+    end
+
+    printf('The high order Hilbert matrix that is symmetric positive definite is %d\n', n);
 end
