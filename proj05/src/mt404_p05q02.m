@@ -34,5 +34,5 @@ function mt404_p05q02()
         end
     end
 
-    printf('The high order Hilbert matrix that is symmetric positive definite is %d\n', n);
+    printf('The high order Hilbert matrix that is numerically symmetric positive definite is %d\n', n - 1);
 end

@@ -44,15 +44,93 @@ http://creativecommons.org/licenses/by-sa/3.0/.
 \end{center}
 \newpage
 \section{Fatora\c{c}\~{a}o de Cholesky}
+Considere as definições abaixo.
+\begin{defi}[Transposição]
+    Dada um matriz $A \in \mathbb{R}^{n \times m} = [a_{ij}]$ a transposição
+    dessa matriz corresponde a matriz $[a_{ji}]$ que é denotada por $A^t$.
+\end{defi}
+\begin{defi}[Matriz simétrica]
+    Uma matriz é dita simétrica se, e somente se, $A = A^t$.
+\end{defi}
+\begin{defi}[Matriz definida positiva]
+    Uma matriz $A \in \mathbb{R}^{n \times n}$ é definida positiva se, e somente
+    se, $x^t A x > 0$ para todo $x \in \mathbb{R}^n$ não nulo.
+\end{defi}
+
+Matrizes simétrica definida positiva aparecem em vários problemas práticos e
+para estas é possível provar os teoremas abaixo.
+\begin{teo}
+    Se $A$ é simétrica definida positiva, então $A$ é não singular (e portanto o
+    sistema linear $A x = b$ possue solução única).
+\end{teo}
+\begin{teo}
+    Seja $M \in \mathbb{R}^{m \times n}$ uma matriz qualquer e $A = M^t M$.
+    Então $A$ é definida positiva.
+\end{teo}
+
+O teorema anterior serve de inspiração para a Fatoração de Cholesky que é
+resumida no teorema a seguir.
+\begin{teo}
+    Seja $A$ definda positiva. Então $A$ pode ser decomposta de maneira única no
+    produto $A = R R^t$ onde $R$ é uma matriz triangular inferior e todos os
+    elementos da diagonal principal de $R$ são positivos.
+\end{teo}
+
+A melhor maneira de saber se uma matriz $A \in \mathrm{R}^{n \times n}$
+simétrica qualquer é definida positiva é tentar obter o fator de Cholesky dela.
 
 \section{Experimentos Computacionais}
 
+\section{Matriz de Hilbert e a Fatoração de Cholesky}
+A matriz de Hilbert de ordem $n$, $H^{(n)}$, é dada por
+\begin{align*}
+    H^{(n)}_{ij} = 1 / (i + j - 1).
+\end{align*}
+
+Pela expressão anterior, verifica-se que a matriz de Hilbert é simétrica e ao
+analisar
+\begin{align*}
+    H^{(1)} &= \begin{bmatrix}
+        1
+    \end{bmatrix}, & H^{(2)} &= \begin{bmatrix}
+        1 & 1/2 \\
+        1/2 & 1/3
+    \end{bmatrix}, & H^{(3)} &= \begin{bmatrix}
+        1 & 1/2 & 1/3 \\
+        1/2 & 1/3 & 1/4 \\
+        1/3 & 1/4 & 1/5
+    \end{bmatrix},
+\end{align*}
+verifica-se que $H^{(1)}$, $H^{(2)}$ e $H^{(3)}$ são simétrica definida
+positiva. Como $H^{(1)}$, $H^{(2)}$ e $H^{(3)}$ são simétrica definida positiva
+gostariamos de saber se as demais matrizes de Hilbert também são. Na literatura,
+encontramos que as matrizes de Hilbert são simétricas definidas positivas e
+também mal condicionadas. 
+
+Como a matriz de Hilbert é simétrica definida positiva e mal condicionada,
+gostariamos de saber a partir de quando (de que ordem) a mal condição da matriz
+impossibilita encontrar, numericamente, a Fatoração de Cholesky da matriz de
+Hilbert, i.e., a partir de que ordem a matriz de Hilbert não é mais definida
+positiva.
+
+Para encontrar a resposta a ``pergunta'' anterior, escreveu-se o
+Código~\ref{code:mt404_p05q02} que executa um loop que a cada iteração aumenta a
+ordem da matriz de Hilbert e em todas as iterações tenta calcular o fator de
+Cholesky da matriz de Hilbert. Quando ocorrer do fator de Cholesky não ser
+calculado, o loop é interrompido e a dimesão da matriz informada.
+
+Ao executar o Código~\ref{code:mt404_p05q02} obtemos como resposta a
+``pergunta'' que a maior dimensão para a qual é possível calcular o fator de
+Cholesky é 12.
+
 \section{C\'{o}digos}
-A seguir encontra-se os c\'{o}digos desenvolvidos neste projeto. Todos os c'{o}digos
+A seguir encontra-se os c\'{o}digos desenvolvidos neste projeto. Todos os c\'{o}digos
 foram testados utilizando o GNU Octave em sua vers\~{a}o
 3.2.4\footnote{Acredita-se que os c\'{o}digos sejam compat\'{i}eis com o MATLAB
 embora n\~{a}o tenham sido testados nesse ambiente.} e encontram-se
 dispon\'{i}veis em \url{https://github.com/r-gaia-cs/mt404-2012s2}.
 \lstinputlisting[style=codes, caption={An\'{a}lise de sensibilidade},
-label={code:mt404_p05}]{src/mt404_p05.m}
+label={code:mt404_p05q01}]{src/mt404_p05q01.m}
+\lstinputlisting[style=codes, caption={An\'{a}lise de sensibilidade},
+label={code:mt404_p05q02}]{src/mt404_p05q02.m}
 \end{document}
