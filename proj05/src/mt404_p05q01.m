@@ -31,14 +31,9 @@ function mt404_p05q01()
     info = [info; [erro, res, opt, dim]];
     [erro, res, opt, dim] = test_matrix(4, 100);
     info = [info; [erro, res, opt, dim]];
-    [erro, res, opt, dim] = test_matrix(5, 10);
-    info = [info; [erro, res, opt, dim]];
-    [erro, res, opt, dim] = test_matrix(5, 50);
-    info = [info; [erro, res, opt, dim]];
-    [erro, res, opt, dim] = test_matrix(5, 100);
-    info = [info; [erro, res, opt, dim]];
     % Uncomment the following line to print the information on screen.
-    info
+    % info
+    printf('writing information at mt404_p05q01.csv');
     csvwrite('mt404_p05q01.csv', info);
 end
 
@@ -79,8 +74,6 @@ function x = solve_with_chol(A, b)
     catch
         printf("can't compute the cholesky factorization of A whos dimension are %d \\times %d.\n", size(A, 1), size(A, 2));
         f_name = strcat(mat2str(floor(1000 * rand())), '.dat');
-        printf("saving matrix into %s.\n", f_name);
-        save('-ascii', f_name, 'A');
     end
 
     if exist('L', 'var')
@@ -188,16 +181,7 @@ function A = build_test_matrix(opt, dim)
               1, -1,  6, 12];
     case 4
         A = tril(rand(dim));
-        for i = 1:dim
-            A(i, i) = abs(A(i, i));
-        end
         A = (A * A');
-    case 5
-        A = tril(rand(dim));
-        A = (A * A');
-        for i = 1:dim
-            A(i, i) = abs(A(i, i));
-        end
     otherwise
         A = [];
     end
