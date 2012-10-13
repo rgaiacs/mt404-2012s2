@@ -14,27 +14,34 @@
 % along with Octave; see the file COPYING.  If not, see
 % <http://www.gnu.org/licenses/>.
 
-function mt404_p05q01()
+function mt404_p05q01(show=0, f_name='mt404_p05q01.csv')
     % Projeto 05, questao 01, de MT404
 
     % Testes
     info = [];
     [erro, res, opt, dim] = test_matrix(1);
-    info = [info; [erro, res, opt, dim]];
+    info = [info; [1, opt, dim, erro, res]];
     [erro, res, opt, dim] = test_matrix(2);
-    info = [info; [erro, res, opt, dim]];
+    info = [info; [2, opt, dim, erro, res]];
     [erro, res, opt, dim] = test_matrix(3);
-    info = [info; [erro, res, opt, dim]];
+    info = [info; [3, opt, dim, erro, res]];
     [erro, res, opt, dim] = test_matrix(4, 10);
-    info = [info; [erro, res, opt, dim]];
+    info = [info; [4, opt, dim, erro, res]];
     [erro, res, opt, dim] = test_matrix(4, 50);
-    info = [info; [erro, res, opt, dim]];
+    info = [info; [5, opt, dim, erro, res]];
     [erro, res, opt, dim] = test_matrix(4, 100);
-    info = [info; [erro, res, opt, dim]];
-    % Uncomment the following line to print the information on screen.
-    % info
-    printf('writing information at mt404_p05q01.csv');
-    csvwrite('mt404_p05q01.csv', info);
+    info = [info; [6, opt, dim, erro, res]];
+    [erro, res, opt, dim] = test_matrix(5, 10);
+    info = [info; [7, opt, dim, erro, res]];
+    [erro, res, opt, dim] = test_matrix(5, 50);
+    info = [info; [8, opt, dim, erro, res]];
+    [erro, res, opt, dim] = test_matrix(5, 100);
+    info = [info; [9, opt, dim, erro, res]];
+    if show
+        disp(info)
+    end
+    printf(cstrcat('writing information at ', f_name, '.\n'));
+    csvwrite(f_name, info);
 end
 
 function x = solve_with_chol(A, b)
@@ -181,6 +188,9 @@ function A = build_test_matrix(opt, dim)
               1, -1,  6, 12];
     case 4
         A = tril(rand(dim));
+        A = (A * A');
+    case 5
+        A = eye(dim) + tril(rand(dim));
         A = (A * A');
     otherwise
         A = [];

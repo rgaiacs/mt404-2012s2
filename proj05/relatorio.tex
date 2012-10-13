@@ -24,13 +24,18 @@
 %
 \documentclass[12pt,a4paper]{article}
 \input{../packages.tex}
+\usepackage{csvsimple}
 \begin{document}
 \title{Projeto No.5 de MT404}
 \author{Raniere Silva \\ ra092767}
 \maketitle
 \begin{abstract}
     Este \'{e} o projeto no.5 da disciplina MT404 - M\'{e}todos Computacionais
-    de \'{A}lgebra Linear. Neste projeto 
+    de \'{A}lgebra Linear. Neste projeto investigou-se a Fatoração de Cholesky
+    que existe apenas para matrizes simétrica definida positiva e o
+    comportamento de matrizes simétrica definida positiva mal-condicionada
+    para as quais pode ocorrer de numericamente não existir a Fatoração de
+    Cholesky.
 \end{abstract}
 \tableofcontents
 \lstlistoflistings
@@ -44,7 +49,6 @@ http://creativecommons.org/licenses/by-sa/3.0/.
 \end{center}
 \newpage
 \section{Fatora\c{c}\~{a}o de Cholesky}
-Considere as definições abaixo.
 \begin{defi}[Transposição]
     Dada um matriz $A \in \mathbb{R}^{n \times m} = [a_{ij}]$ a transposição
     dessa matriz corresponde a matriz $[a_{ji}]$ que é denotada por $A^t$.
@@ -65,21 +69,63 @@ para estas é possível provar os teoremas abaixo.
 \end{teo}
 \begin{teo}
     Seja $M \in \mathbb{R}^{m \times n}$ uma matriz qualquer e $A = M^t M$.
-    Então $A$ é definida positiva.
+    Então $A$ é simétrica definida positiva.
 \end{teo}
 
-O teorema anterior serve de inspiração para a Fatoração de Cholesky que é
-resumida no teorema a seguir.
+Motivado pela ocorrência das matrizes simétrica definida positiva e pelo fato
+desta ser não singular, ``construi-se'' uma fatoração que vale apenas para essas
+matrizes,a Fatoração de Cholesky, que é resumida no teorema a seguir.
 \begin{teo}
     Seja $A$ definda positiva. Então $A$ pode ser decomposta de maneira única no
     produto $A = R R^t$ onde $R$ é uma matriz triangular inferior e todos os
     elementos da diagonal principal de $R$ são positivos.
 \end{teo}
 
-A melhor maneira de saber se uma matriz $A \in \mathrm{R}^{n \times n}$
-simétrica qualquer é definida positiva é tentar obter o fator de Cholesky dela.
+Saber, pela definição, se uma matriz $A \in \mathrm{R}^{n \times n}$ simétrica
+qualquer é definida positiva costuma ser muito trabalhoso se não impossível. Por
+esse motivo, costuma-se tentar calcular o fator de Cholesky para qualquer matriz
+simétrica (e essa é uma das formas de descobrir se a matriz é definda positiva).
 
 \section{Experimentos Computacionais}
+Para investigar a Fatoração de Cholesky implementou-se as funções presentes no
+Código~\ref{code:mt404_p05q01}.
+
+Os resultados obtidos podem ser agrupados em três grupos representados pelas
+Tabelas~\ref{tab:res_1},\ref{tab:res_2}~e~\ref{tab:res_3} que diferem-se pelos
+casos em que não foi possível calcular o fator de Cholesky (quando o erro e o
+resíduo são Inf).
+\begin{table}[!htb]
+    \centering
+    \caption{Informações obtidas nos testes computacionais (1).}
+    \label{tab:res_1}
+    \csvautotabular{src/mt404_p05q01-1.csv}
+\end{table}
+\begin{table}[!htb]
+    \centering
+    \caption{Informações obtidas nos testes computacionais (2).}
+    \label{tab:res_2}
+    \csvautotabular{src/mt404_p05q01-2.csv}
+\end{table}
+\begin{table}[!htb]
+    \centering
+    \caption{Informações obtidas nos testes computacionais (3).}
+    \label{tab:res_3}
+    \csvautotabular{src/mt404_p05q01-3.csv}
+\end{table}
+
+As matrizes do tipo 4 são matrizes simétricas iguais a $G G^t$, sendo que
+$G$ é uma matriz triangular inferior cujos elementos não nulos são valores
+aleatórios entre 0 e 1. E as matrizes do tipo 5 diferem das matrizes do tipo 4
+pelos elementos na diagonal da matriz $G$ serem aleatórios entre 1 e 2.
+
+Como pode ser observado pelas tabelas, a matriz do tipo 3 falhou pois possui
+pelo menos um elemento negativo na diagonal e algumas matrizes do tipo 4
+falharam porque eram matrizes numericamente singulares (como os elementos da
+diagonal de $G$ são maiores que zero e menores que um e $G$ é diagonal o
+determinante de $G$ pode ser muito próximo de zero).
+
+Pelas tabelas, observa-se que o erro relativo costuma ser próximo e
+o resíduo aumenta com o aumento da dimensão da matriz.
 
 \section{Matriz de Hilbert e a Fatoração de Cholesky}
 A matriz de Hilbert de ordem $n$, $H^{(n)}$, é dada por
@@ -129,8 +175,8 @@ foram testados utilizando o GNU Octave em sua vers\~{a}o
 3.2.4\footnote{Acredita-se que os c\'{o}digos sejam compat\'{i}eis com o MATLAB
 embora n\~{a}o tenham sido testados nesse ambiente.} e encontram-se
 dispon\'{i}veis em \url{https://github.com/r-gaia-cs/mt404-2012s2}.
-\lstinputlisting[style=codes, caption={An\'{a}lise de sensibilidade},
+\lstinputlisting[style=codes, caption={Matrizes aleatórias},
 label={code:mt404_p05q01}]{src/mt404_p05q01.m}
-\lstinputlisting[style=codes, caption={An\'{a}lise de sensibilidade},
+\lstinputlisting[style=codes, caption={Matriz de Hilbert},
 label={code:mt404_p05q02}]{src/mt404_p05q02.m}
 \end{document}
