@@ -14,30 +14,72 @@ c You should have received a copy of the GNU General Public License
 c along with Octave; see the file COPYING.  If not, see
 c <http://www.gnu.org/licenses/>.
 
-       subroutine show_matrix(A, n)
-           ! parameters
-           integer n
-           real A(n, n)
-           ! aux var
-           integer i
-           integer j
-           i = 1
-           do while(i .le. n)
-               write (*, *) (A(i, j), j = 1,n)
-               i = i + 1
-           end do
-       end
+      subroutine show_matrix(A, n)
+          ! parameters
+          integer n
+          real A(n, n)
+          ! aux var
+          integer i
+          integer j
+          i = 1
+          do while(i .le. n)
+              write (*, *) (A(i, j), j = 1,n)
+              i = i + 1
+          end do
+      end
 
-       subroutine show_chol(A, n)
-           ! parameters
-           integer n
-           real A(n, n)
-           ! aux var
-           integer i
-           integer j
-           i = 1
-           do while(i .le. n)
-               write (*, *) (0, j = 1,i-1) (A(i, j), j = i,n)
-               i = i + 1
-           end do
-       end
+      subroutine rand_tl(A, n)
+          ! parameters
+          integer n
+          real A(n, n)
+          ! aux var
+          integer i
+          integer j
+          i = 1
+          do while(i .le. n)
+              do while(j .le. n)
+                  A(i, j) = rand()
+                  j = j + 1
+              end do
+              i = i + 1
+          end do
+      end
+
+      subroutine sum_identity(A, n)
+          ! parameters
+          integer n
+          real A(n, n)
+          ! aux var
+          integer i
+          i = 1
+          do while(i .le. n)
+              A(i, i) = A(i, i) + 1
+              i = i + 1
+          end do
+      end
+      
+      subroutine mt2(A, G, n)
+          ! This function return A = G G^t
+          ! parameters
+          integer n
+          real A(n, n)
+          real G(n, n)
+          ! aux var
+          integer i
+          integer j
+          integer k
+          i = 1
+          j = 1
+          k = 1
+          do while(i .le. n)
+              do while(j .le. n)
+                  A(i, j) = 0
+                  do while(k .le. n)
+                      A(i, j) = A(i, j) + G(i, k) * G(j, k)
+                      k = k + 1
+                  end do
+                  j = j + 1
+              end do
+              i = i + 1
+          end do
+      end
