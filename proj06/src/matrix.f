@@ -14,29 +14,30 @@ c You should have received a copy of the GNU General Public License
 c along with Octave; see the file COPYING.  If not, see
 c <http://www.gnu.org/licenses/>.
 
-      subroutine show_matrix(A, n)
+      subroutine show_matrix(A, lda, n)
           ! parameters
-          integer n
-          real A(n, n)
+          integer n, lda
+          real A(lda, *)
           ! aux var
           integer i
           integer j
           i = 1
           do while(i .le. n)
-              write (*, *) (A(i, j), j = 1,n)
+              write (*, *) (A(i, j), j = 1, n)
               i = i + 1
           end do
       end
 
-      subroutine rand_tl(A, n)
+      subroutine rand_tl(A, lda, n)
           ! parameters
-          integer n
-          real A(n, n)
+          integer n, lda
+          real A(lda, *)
           ! aux var
           integer i
           integer j
           i = 1
           do while(i .le. n)
+              j = 1
               do while(j .le. n)
                   A(i, j) = rand()
                   j = j + 1
@@ -45,10 +46,10 @@ c <http://www.gnu.org/licenses/>.
           end do
       end
 
-      subroutine sum_identity(A, n)
+      subroutine sum_identity(A, lda, n)
           ! parameters
-          integer n
-          real A(n, n)
+          integer n, lda
+          real A(lda, *)
           ! aux var
           integer i
           i = 1
@@ -58,12 +59,12 @@ c <http://www.gnu.org/licenses/>.
           end do
       end
       
-      subroutine mt2(A, G, n)
+      subroutine mt2(A, G, lda, n)
           ! This function return A = G G^t
           ! parameters
-          integer n
-          real A(n, n)
-          real G(n, n)
+          integer n, lda
+          real A(lda, *)
+          real G(lda, *)
           ! aux var
           integer i
           integer j
@@ -72,8 +73,10 @@ c <http://www.gnu.org/licenses/>.
           j = 1
           k = 1
           do while(i .le. n)
+              j = 1
               do while(j .le. n)
                   A(i, j) = 0
+                  k = 1
                   do while(k .le. n)
                       A(i, j) = A(i, j) + G(i, k) * G(j, k)
                       k = k + 1

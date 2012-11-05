@@ -1,8 +1,9 @@
-all: compile test
+all: compile
 
 compile:
-	gfortran -o test test.f cholesky.f matrix.f
-	gfortran -o mt404_p06 mt404_p06.f cholesky.f matrix.f
+	gfortran -g -o sample sample.f cholesky.f matrix.f
+	gfortran -g -o mt404_p06 mt404_p06.f cholesky.f matrix.f
 
 test:
-	./test
+	./sample > sample.out
+	diff sample.exp sample.out

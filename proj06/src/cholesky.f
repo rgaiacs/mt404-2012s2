@@ -25,11 +25,10 @@ c Display the status of the Cholesky Decomposition.
       end
 
 c Display the Cholesky factor, $G$, that is lower triangular.
-      subroutine show_chol(G, n, s)
+      subroutine show_chol(G, lda, n, s)
           ! parameters
-          real G(n, n)
-          integer n
-          integer s
+          integer n, lda, s
+          real G(lda, *)
           ! aux var
           integer i
           integer j
@@ -38,7 +37,7 @@ c Display the Cholesky factor, $G$, that is lower triangular.
           else
               i = 1
               do while(i .le. n)
-                  write (*, *) (G(i, j), j = 1, i - 1), (0.0, j = i, n)
+                  write (*, *) (G(i, j), j = 1, i), (0.0, j = i + 1, n)
                   i = i + 1
               end do
           end if
@@ -46,41 +45,39 @@ c Display the Cholesky factor, $G$, that is lower triangular.
       
 c Try to compute the Cholesky factor, $G$, of the matrix $A$. $G$ is
 c lower triangular.
-      subroutine chol(A, n, s, tol)
+      subroutine chol(A, lda, n, s, tol)
           ! parameters
-          real A(n, n)
+          integer n, lda, s
+          real A(lda, *)
           real tol
-          integer n
-          integer s
           ! aux var
           integer i
           integer j
           integer k
           ! Cholesky: Outer product version
           ! See Golub, 145.
-          k = n
-          do while(k .le. 1)
+          k = 1
+          s = 0
+          do while(k .le. n)
               if (A(k, k) .le. tol) then
                   s = 1
-                  stop
+                  goto 100
               end if
               A(k, k) = sqrt(A(k, k))
-              i = k - 1
-              do while(i .le. 1)
+              i = k + 1
+              do while(i .le. n)
                   A(i, k) = A(i, k) / A(k, k)
-                  i = i - 1
+                  i = i + 1
               end do
-              j = k - 1
-              do while(j .le. 1)
+              j = k + 1
+              do while(j .le. n)
                   i = j
-                  do while(i .le. 1)
+                  do while(i .le. n)
                       A(i, j) = A(i, j) - A(i, k) * A(j, k)
-                      i = i - 1
+                      i = i + 1
                   end do
-                  j = j - 1
+                  j = j + 1
               end do
-              k = k - 1
+              k = k + 1
           end do
-          s = 0
-          stop
-      end
+ 100  end

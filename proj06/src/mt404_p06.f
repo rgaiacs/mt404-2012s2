@@ -14,9 +14,12 @@ c You should have received a copy of the GNU General Public License
 c along with Octave; see the file COPYING.  If not, see
 c <http://www.gnu.org/licenses/>.
 
-      integer n
+      integer n, lda, s
       real A(100, 100)
       real G(100, 100)
+      real tol
+      lda = 100
+      tol = 1.0E-16
       
       ! Matrix A1
       n = 3
@@ -29,8 +32,8 @@ c <http://www.gnu.org/licenses/>.
       A(3, 1) = 24
       A(3, 2) = 26
       A(3, 3) = 21
-      call chol(A, n, s)
-      call show_chol(A, n)
+      call chol(A, lda, n, s, tol)
+      call show_chol(A, lda, n, s)
 
       ! Matrix A2
       n = 5
@@ -52,15 +55,15 @@ c <http://www.gnu.org/licenses/>.
       A(4, 1) = -1
       A(4, 2) =  2
       A(4, 3) = -3
-      A(4, 4) =  3
+      A(4, 4) =  4
       A(4, 5) = -4
       A(5, 1) =  1
       A(5, 2) = -2
       A(5, 3) =  3
       A(5, 4) = -4
       A(5, 5) =  5
-      call chol(A, n, s)
-      call show_chol(A, n)
+      call chol(A, lda, n, s, tol)
+      call show_chol(A, lda, n, s)
 
       ! Matrix A3
       n = 3
@@ -73,31 +76,34 @@ c <http://www.gnu.org/licenses/>.
       A(3, 1) =   9
       A(3, 2) = -20
       A(3, 3) =  29
-      call chol(A, n, s)
-      call show_chol(A, n)
+      call chol(A, lda, n, s, tol)
+      call show_chol(A, lda, n, s)
 
       ! Matrix A4
-      n = 10
-      call rand_tl(G, n)
-      call sum_identity(G, n)
-      call mt2(A, G, n)
-      call chol(A, n, s)
-      call show_chol(A, n)
+      n = 5
+      call rand_tl(G, lda, n)
+      call sum_identity(G, lda, n)
+      call show_matrix(G, lda, n)
+      write (*, *)
+      call mt2(A, G, lda, n)
+      call show_matrix(A, lda, n)
+      call chol(A, lda, n, s, tol)
+      call chol_status(s)
 
       ! Matrix A5
       n = 50
-      call rand_tl(G, n)
-      call sum_identity(G, n)
-      call mt2(A, G, n)
-      call chol(A, n, s)
-      call show_chol(A, n)
+      call rand_tl(G, lda, n)
+      call sum_identity(G, lda, n)
+      call mt2(A, G, lda, n)
+      call chol(A, lda, n, s, tol)
+      call chol_status(s)
 
       ! Matrix A6
       n = 100
-      call rand_tl(G, n)
-      call sum_identity(G, n)
-      call mt2(A, G, n)
-      call chol(A, n, s)
-      call show_chol(A, n)
+      call rand_tl(G, lda, n)
+      call sum_identity(G, lda, n)
+      call mt2(A, G, lda, n)
+      call chol(A, lda, n, s, tol)
+      call chol_status(s)
       stop
       end
