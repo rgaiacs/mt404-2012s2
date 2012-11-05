@@ -14,6 +14,7 @@ c You should have received a copy of the GNU General Public License
 c along with Octave; see the file COPYING.  If not, see
 c <http://www.gnu.org/licenses/>.
 
+c Display the status of the Cholesky Decomposition.
       subroutine chol_status(s)
           integer s
           if (s .ne. 0) then
@@ -23,9 +24,10 @@ c <http://www.gnu.org/licenses/>.
           end if
       end
 
-      subroutine show_chol(A, n, s)
+c Display the Cholesky factor, $G$, that is lower triangular.
+      subroutine show_chol(G, n, s)
           ! parameters
-          real A(n, n)
+          real G(n, n)
           integer n
           integer s
           ! aux var
@@ -36,15 +38,18 @@ c <http://www.gnu.org/licenses/>.
           else
               i = 1
               do while(i .le. n)
-                  write (*, *) (0.0, j = 1,i-1), (A(i, j), j = i,n)
+                  write (*, *) (G(i, j), j = 1, i - 1), (0.0, j = i, n)
                   i = i + 1
               end do
           end if
       end
       
-      subroutine chol(A, n, s)
+c Try to compute the Cholesky factor, $G$, of the matrix $A$. $G$ is
+c lower triangular.
+      subroutine chol(A, n, s, tol)
           ! parameters
           real A(n, n)
+          real tol
           integer n
           integer s
           ! aux var
@@ -53,28 +58,28 @@ c <http://www.gnu.org/licenses/>.
           integer k
           ! Cholesky: Outer product version
           ! See Golub, 145.
-          k = 1
-          do while(k .le. n)
-              if (A(k, k) .le. 1.0E-06) then
+          k = n
+          do while(k .le. 1)
+              if (A(k, k) .le. tol) then
                   s = 1
                   stop
               end if
               A(k, k) = sqrt(A(k, k))
-              i = k + 1
-              do while(i .le. n)
+              i = k - 1
+              do while(i .le. 1)
                   A(i, k) = A(i, k) / A(k, k)
-                  i = i + 1
+                  i = i - 1
               end do
-              j = k + 1
-              do while(j .le. n)
+              j = k - 1
+              do while(j .le. 1)
                   i = j
-                  do while(i .le. n)
+                  do while(i .le. 1)
                       A(i, j) = A(i, j) - A(i, k) * A(j, k)
-                      i = i + 1
+                      i = i - 1
                   end do
-                  j = j + 1
+                  j = j - 1
               end do
-              k = k + 1
+              k = k - 1
           end do
           s = 0
           stop
