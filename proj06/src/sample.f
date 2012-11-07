@@ -14,18 +14,19 @@ c You should have received a copy of the GNU General Public License
 c along with Octave; see the file COPYING.  If not, see
 c <http://www.gnu.org/licenses/>.
 
-      integer n, lda, s
-      real A(100, 100)
-      lda = 100
+      program main
+          integer n, lda, s
+          real A(100, 100)
+          lda = 100
 
-      ! Matrix A1
-      n = 2
-      A(1, 1) = 1.0D0
-      A(1, 2) = 1.0D0
-      A(2, 1) = 1.0D0
-      A(2, 2) = 2.0D0
-      call show_matrix(A, lda, n)
-      call chol(A, lda, n, s, 1E-8)
-      call show_chol(A, lda, n, s)
+          ! Matrix A1
+          n = 2
+          A(1, 1) = 1.0D0
+          A(1, 2) = 1.0D0
+          A(2, 1) = 1.0D0
+          A(2, 2) = 2.0D0
+          call show_smatrix(A, lda, n)
+          call chol(A, lda, n, s, 1E-8)
+          call show_chol(A, lda, n, s)
       stop
-      end
+      end program main
