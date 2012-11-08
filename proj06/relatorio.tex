@@ -27,11 +27,13 @@
 \usepackage{csvsimple}
 \begin{document}
 \title{Projeto No.6 de MT404}
-\author{Raniere Silva \\ ra092767}
+\author{Raniere Silva \\ ra092767  \and Julio Cesar \\ ra984581}
 \maketitle
 \begin{abstract}
     Este \'{e} o projeto no.6 da disciplina MT404 - M\'{e}todos Computacionais
-    de \'{A}lgebra Linear. Neste projeto 
+    de \'{A}lgebra Linear. Neste projeto implementou-se em Fortran a Fatoração
+    de Cholesky para uma matriz cheia e realizou-se alguns testes
+    computacionais.
 \end{abstract}
 \tableofcontents
 \lstlistoflistings
@@ -45,19 +47,80 @@ http://creativecommons.org/licenses/by-sa/3.0/.
 \end{center}
 \newpage
 \section{Fatora\c{c}\~{a}o de Cholesky}
+A Fatoração de Cholesky é definida no teorema abaixo.
+\begin{teo}
+    Seja $A \in \mathbb{R}^{n \times n}$ uma matriz simétrica definda positiva.
+    Então $A$ pode ser decomposta de maneira única no produto $A = R R^t$ onde
+    $R$ é uma matriz triangular inferior e todos os elementos da diagonal
+    principal de $R$ são positivos.
+\end{teo}
+Uma matriz é simétrica se, e somente se, $A = A^t$. E uma matriz $A \in
+\mathbb{R}^{n \times n}$ é definida positiva se, e somente se, $x^t A x > 0$
+para todo $x \in \mathbb{R}^n$ não nulo.
+
+Saber, pela definição, se uma matriz $A \in \mathrm{R}^{n \times n}$ simétrica
+qualquer é definida positiva costuma ser muito trabalhoso se não impossível. Por
+esse motivo, costuma-se tentar calcular o fator de Cholesky para qualquer matriz
+simétrica (e essa é uma das formas de descobrir se a matriz é definda
+positiva).\footnote{A justificativa para essa afirmação encontram-se na maioria
+dos livros de Álgebra Linear Numérica.}
+
+\section{Experimentos Computacionais}
+Para os experimentos computacionais implementou-se a Fatoração de Cholesky em
+Fortran, ver Código~\ref{code:cholesky}, e várias outras rotinas auxiliares para
+manipular matrizes e vetores, ver
+Códigos~\ref{code:vector}~e~\ref{code:square_matrix}, respectivamente.
+
+Os experimentos computacionais foram implementados no
+Código~\ref{code:mt404_p06} e inspirados no Projeto No.5 de MT404
+\cite{Raniere-2012-MT404Proj05}.
+
+Como apresentado no Projeto No.5 de MT404, ao gerar uma matriz $G \in
+\mathbb{R}^{n \times n}$ triangular inferior ``aleatória'' com elementos entre 0
+e 1 e calcular $A = G G^t$ observa-se que a chance da matriz $A$ ser
+numericamente indefinida é elevada. Uma solução para esse problema é adicionar
+uma unidade a todos os elementos da diagonal principal de $G$ e depois calcular
+$A = G G^t$. Por esse motivo, nos experimentos computacionais realizados a
+matriz $G$ possui os elementos da diagonal principal entre 1 e 2.
+
+Os dados obtidos nos experimentos computacionais são apresentados na
+Tabela~\ref{tab:res}, os valores inf para o erro e resíduo indicam que a matriz
+testada não é simétrica definida positiva. Comparando essa tabela com as tabelas
+presentes no Projeto No.5 de MT404, verifica-se que elas são semelhantes.
+\begin{table}[!htb]
+    \centering
+    \caption{Informações obtidas nos testes computacionais.}
+    \label{tab:res}
+    \csvautotabular{src/mt404_p06.csv}
+\end{table}
+
+Alguns pontos que chamam a atenção na Tabela~\ref{tab:res} são:
+\begin{enumerate}
+    \item O resíduo relativo no teste 1 é maior que os demais;
+    \item O erro relativo nos testes 5 e 6 foram iguais a 1.
+\end{enumerate}
+A explicar essas observações ficam para trabalhos futuros.
 
 \section{C\'{o}digos}
-A seguir encontra-se os c\'{o}digos desenvolvidos neste projeto. Todos os c\'{o}digos
-foram testados utilizando o GNU Octave em sua vers\~{a}o
-3.2.4\footnote{Acredita-se que os c\'{o}digos sejam compat\'{i}eis com o MATLAB
-embora n\~{a}o tenham sido testados nesse ambiente.} e encontram-se
-dispon\'{i}veis em \url{https://github.com/r-gaia-cs/mt404-2012s2}.
-\lstinputlisting[style=codes, caption={Matrizes aleatórias},
+A seguir encontra-se os c\'{o}digos desenvolvidos neste projeto e que
+encontram-se disponíveis em \url{https://github.com/r-gaia-cs/mt404-2012s2}.
+
+Todos os c\'{o}digos foram implementados em Fortran e as instruções para
+compilação encontram-se no Código~\ref{code:Makefile}. Para os testes
+computacionais utilizou-se a versão do gfortran baseada no gcc 4.6.3.
+\lstinputlisting[style=codes, caption={Rotina de teste},
 label={code:mt404_p06}]{src/mt404_p06.f}
-\lstinputlisting[style=codes, caption={Matrizes aleatórias},
-label={code:matrix}]{src/matrix.f}
-\lstinputlisting[style=codes, caption={Matrizes aleatórias},
+\lstinputlisting[style=codes, caption={Subrotinas envolvendo vetores},
+label={code:vector}]{src/vector.f}
+\lstinputlisting[style=codes, caption={Subrotinas envolvendo matrizes},
+label={code:square_matrix}]{src/square_matrix.f}
+\lstinputlisting[style=codes, caption={Subrotinas envolvendo a Decomposição de
+Cholesky},
 label={code:cholesky}]{src/cholesky.f}
-\lstinputlisting[style=codes, caption={Matriz de Hilbert},
+\lstinputlisting[style=codes, caption={Makefile},
 label={code:Makefile}]{src/Makefile}
+
+\addcontentsline{toc}{section}{Refer\^{e}ncia Bibliogr\'{a}fica}
+\bibliographystyle{alpha}
+\bibliography{../referencias}
 \end{document}

@@ -21,10 +21,14 @@ c <http://www.gnu.org/licenses/>.
           ! parameters
           integer s
 
-          if (s .ne. 0) then
-              write (*, *) 'The matrix is not positive definite.'
-          else
+          if (s .eq. 0) then
               write (*, *) 'The matrix is positive definite.'
+          end if
+          if (s .eq. 1) then
+              write (*, *) 'The matrix is not symmetric.'
+          end if
+          if (s .eq. 2) then
+              write (*, *) 'The matrix is not positive definite.'
           end if
       end subroutine chol_status
 
@@ -39,20 +43,22 @@ c <http://www.gnu.org/licenses/>.
           integer i
           integer j
 
-          if (s .ne. 0) then
-              write (*, *) 'The matrix is not positive definite.'
-          else
+          if (s .eq. 0) then
               i = 1
               do while (i .le. n)
                   write (*, *) (G(i, j), j = 1, i), (0.0, j = i + 1, n)
                   i = i + 1
               end do
+          else
+              call chol_status(s)
           end if
       end subroutine show_chol
       
       subroutine chol(A, lda, n, s, tol)
           ! Try to compute the Cholesky factor, $G$, of the matrix $A :
-          ! n \times n$. $G$ is lower triangular.
+          ! n \times n$, where $G$ is lower triangular and $G G^T = A$.
+          !
+          ! The Cholesky factor is store in the memory space of $A$.
 
           ! parameters
           integer n, lda, s
@@ -63,32 +69,37 @@ c <http://www.gnu.org/licenses/>.
           integer j
           integer k
 
-          ! Cholesky: Outer product version
-          ! See Golub, 145.
-          k = 1
-          s = 0
-          do while (k .le. n)
-              if (A(k, k) .le. tol) then
-                  s = 1
-                  goto 100
-              end if
-              A(k, k) = sqrt(A(k, k))
-              i = k + 1
-              do while (i .le. n)
-                  A(i, k) = A(i, k) / A(k, k)
-                  i = i + 1
-              end do
-              j = k + 1
-              do while (j .le. n)
-                  i = j
+          call is_symmetric(A, lda, n, s)
+          if (s .eq. 1) then
+              ! Cholesky: Outer product version
+              ! See Golub, 145.
+              k = 1
+              s = 0
+              do while (k .le. n)
+                  if (A(k, k) .le. tol) then
+                      s = 2
+                      goto 100
+                  end if
+                  A(k, k) = sqrt(A(k, k))
+                  i = k + 1
                   do while (i .le. n)
-                      A(i, j) = A(i, j) - A(i, k) * A(j, k)
+                      A(i, k) = A(i, k) / A(k, k)
                       i = i + 1
                   end do
-                  j = j + 1
+                  j = k + 1
+                  do while (j .le. n)
+                      i = j
+                      do while (i .le. n)
+                          A(i, j) = A(i, j) - A(i, k) * A(j, k)
+                          i = i + 1
+                      end do
+                      j = j + 1
+                  end do
+                  k = k + 1
               end do
-              k = k + 1
-          end do
+          else
+              s = 1
+          end if
  100  end subroutine chol
 
       subroutine solve_with_chol(A, x, b, lda, n, s, tol)

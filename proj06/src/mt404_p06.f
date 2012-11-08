@@ -15,7 +15,7 @@ c along with Octave; see the file COPYING.  If not, see
 c <http://www.gnu.org/licenses/>.
 
       program main
-          integer n, lda, s, n_rand, i
+          integer n, lda, state, n_rand, i
           integer rand_dim(100)
           real A(100, 100)
           real G(100, 100)
@@ -23,8 +23,8 @@ c <http://www.gnu.org/licenses/>.
           lda = 100
           tol = 1.0E-8
           
-          write (*, *) 'erro, res, opt, dim'
-  900     format (e10.4, ',', e10.4, ',', i4, ',', i4)
+          write (*, *) "Teste,Tipo,Dimens\~{a}o,Erro Relativo"//
+     .",Res\'{i}duo Relativo"
           ! Matrix A1
           n = 3
           A(1, 1) = 36
@@ -36,8 +36,8 @@ c <http://www.gnu.org/licenses/>.
           A(3, 1) = 24
           A(3, 2) = 26
           A(3, 3) = 21
-          call test_matrix(A, lda, n, tol, erro, res)
-          write (*, 900) erro, res, 1, n
+          call test_matrix(A, lda, n, tol, state, erro, res)
+          call write_info(state, 1, 1, n, erro, res)
 
           ! Matrix A2
           n = 5
@@ -66,8 +66,8 @@ c <http://www.gnu.org/licenses/>.
           A(5, 3) =  3
           A(5, 4) = -4
           A(5, 5) =  5
-          call test_matrix(A, lda, n, tol, erro, res)
-          write (*, 900) erro, res, 2, n
+          call test_matrix(A, lda, n, tol, state, erro, res)
+          call write_info(state, 2, 2, n, erro, res)
 
           ! Matrix A3
           n = 3
@@ -80,8 +80,8 @@ c <http://www.gnu.org/licenses/>.
           A(3, 1) =   9
           A(3, 2) = -20
           A(3, 3) =  29
-          call test_matrix(A, lda, n, tol, erro, res)
-          write (*, 900) erro, res, 3, n
+          call test_matrix(A, lda, n, tol, state, erro, res)
+          call write_info(state, 3, 3, n, erro, res)
 
           nrand = 3
           rand_dim(1) = 5
@@ -93,22 +93,21 @@ c <http://www.gnu.org/licenses/>.
               call rand_tl(G, lda, n)
               call sum_identity(G, lda, n)
               call mt2(A, G, lda, n)
-              call test_matrix(A, lda, n, tol, erro, res)
-              write (*, 900) erro, res, 3, n
+              call test_matrix(A, lda, n, tol, state, erro, res)
+              call write_info(state, i + 3, 5, rand_dim(i), erro, res)
               i =  i + 1
           end do
       end program main
 
-      subroutine test_matrix(A, lda, n, tol, erro, res)
+      subroutine test_matrix(A, lda, n, tol, state, erro, res)
           ! This function test the Cholesky decomposition to solve a
           ! linear system $A x = b$, where $A : n \times n$.
 
           ! parameters
-          integer n, lda
+          integer n, lda, state
           real A(lda, *)
           real tol, erro, res
           ! aux var
-          integer state
           real A_copy(lda, lda)
           real s(lda)
           real b(lda)
@@ -119,12 +118,15 @@ c <http://www.gnu.org/licenses/>.
           call rand_v(s, n)
           call mtv(A, s, b, lda, n)
           call copy_matrix(A, A_copy, lda, n)
+          ! We need copy the matrix $A$ because it will be lost when
+          ! copute the Cholesky factor.
           call solve_with_chol(A, x, b, lda, n, state, tol)
           if (state .eq. 0) then
               call vpov(x, s, aux, n)
               call vnorm_inf(aux, n, num)
               call vnorm_inf(x, n, den)
               erro = num / den
+              ! Once we will not need $s$ again, we can reuse it.
               call mtv(A_copy, x, s, lda, n)
               call vpov(b, s, aux, n)
               call vnorm_inf(aux, n, num)
@@ -132,3 +134,19 @@ c <http://www.gnu.org/licenses/>.
               res = num / den
           end if
       end subroutine test_matrix
+
+      subroutine write_info(state, id, test, n, erro, res)
+          ! Write the information about a test.
+
+          !parameters
+          integer state, id, test, n
+          real erro, res
+
+900       format (i4, ',', i4, ',', i4, ',',  e10.4, ',', e10.4)
+901       format (i4, ',', i4, ',', i4, ',inf,inf')
+          if (state .eq. 0) then
+              write (*, 900) id, test, n, erro, res
+          else
+              write (*, 901) id, test, n
+          end if
+      end subroutine write_info

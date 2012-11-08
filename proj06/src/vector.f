@@ -74,13 +74,14 @@ c <http://www.gnu.org/licenses/>.
           real x(*)
           real norm
           !aux var
-          integer i
+          integer i, x_abs
 
           i = 1
-          norm = x(i)
+          norm = abs(x(i))
           do while (i .le. n)
-              if (norm .le. x(i)) then
-                  norm = x(i)
+              x_abs = abs(x(i))
+              if (norm .le. x_abs) then
+                  norm = x_abs
               end if
               i = i + 1
           end do

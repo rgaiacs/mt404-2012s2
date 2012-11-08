@@ -75,6 +75,31 @@ c <http://www.gnu.org/licenses/>.
           end do
       end subroutine transpose_smatrix
 
+      subroutine is_symmetric(A, lda, n, s)
+          ! This function verify if the matrix $A : n \times n$ is
+          ! symmetric.
+
+          ! parameters
+          integer lda, n, s
+          real A(lda, *)
+          ! aux var
+          integer i, j
+
+          s = 1
+          i = 1
+          do while (i .le. n)
+              j = i + 1
+              do while (j .le. n)
+                  if (A(i, j) .ne. A(j, i)) then
+                      s = 0
+                      go to 100
+                  end if
+                  j = j + 1
+              end do
+              i = i + 1
+          end do
+100   end subroutine is_symmetric
+
       subroutine rand_tl(A, lda, n)
           ! This function put random numbers in the lower triangular
           ! part of the matrix $A : n \times n$.
