@@ -14,16 +14,19 @@
 # along with Octave; see the file COPYING.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-lblas='-lblas'
-llapack='-llapack'
+lblas=-lblas
+llapack=-llapack
 
 all: compile
 
 compile:
-	gfortran $(DEBUG) $(lblas) $(llapack) -o mt404_p07 mt404_p07.f
+	gfortran $(DEBUG) mt404_p07.f $(lblas) $(llapack) -o mt404_p07 
+
+sample: sample.f
+	gfortran $(DEBUG) sample.f dsm.f $(lblas) $(llapack) -o sample 
 
 debug:
-	$(MAKE) $(MAKEFILE) DEBUG="-g"
+	$(MAKE) $(MAKEFILE) DEBUG=-g
 
 benchmark:
 	./mt404_p07
@@ -31,8 +34,8 @@ benchmark:
 help:
 	@echo 'To compile this files you need a BLAS library and Lapack install.'
 	@echo 'To specify where the libraries are install use:'
-	@echo '    lblas="-L/path/to/blas"'
-	@echo '    llapack="-L/path/to/lapack"'
+	@echo '    lblas=-L/path/to/blas'
+	@echo '    llapack=-L/path/to/lapack'
 	@echo ''
 	@echo 'If you need more information on how to install the libaries, see'
 	@echo 'http://gcc.gnu.org/wiki/GfortranBuild'
