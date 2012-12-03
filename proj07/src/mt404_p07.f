@@ -15,37 +15,28 @@ c along with Octave; see the file COPYING.  If not, see
 c <http://www.gnu.org/licenses/>.
 
       program main
-          integer m, n
-          double precision r
-
-          call test01(50, 10, r)
-          write (*, *) r
-          call test02(50, 10, r)
-          write (*, *) r
-          call test03(50, 10, r)
-          write (*, *) r
+          call bench(1)
+          call bench(2)
+          call bench(3)
       end program main
 
       subroutine test01(m, n, r)
           ! This function match the test 1.
 
           ! parameters
+          parameter (lda=1000, ldb=1000, lwork=1000)
+          ! arguments
           integer, intent(in) :: m, n
           double precision, intent(out) :: r
           ! test var
-          integer lda, ldb
-          double precision A(1000, 1000)
-          double precision b(1000, 1)
-          double precision tau(1000, 1000)
-          double precision work(1000)
-          integer lwork, nrhs, info
+          double precision A(lda, lda)
+          double precision b(ldb, 1)
+          double precision work(lwork)
+          integer nrhs, info
           ! aux var
           integer i, j
 
-          lda = 1000
-          ldb = 1000
           nrhs = 1
-          lwork = 1000
 
           i = 1
           do while (i .le. n)
@@ -82,22 +73,19 @@ c <http://www.gnu.org/licenses/>.
           ! This function match the test 1.
 
           ! parameters
+          parameter (lda=1000, ldb=1000, lwork=1000)
+          ! arguments
           integer, intent(in) :: m, n
           double precision, intent(out) :: r
           ! test var
-          integer lda, ldb
-          double precision A(1000, 1000)
-          double precision b(1000, 1)
-          double precision tau(1000, 1000)
-          double precision work(1000)
-          integer lwork, nrhs, info
+          double precision A(lda, lda)
+          double precision b(ldb, 1)
+          double precision work(lwork)
+          integer nrhs, info
           ! aux var
           integer i, j
 
-          lda = 1000
-          ldb = 1000
           nrhs = 1
-          lwork = 1000
 
           i = 1
           do while (i .le. m)
@@ -123,23 +111,19 @@ c <http://www.gnu.org/licenses/>.
           ! This function match the test 1.
 
           ! parameters
+          parameter (lda=1000, ldb=1000, lwork=1000)
+          ! arguments
           integer, intent(in) :: m, n
           double precision, intent(out) :: r
           ! test var
-          integer lda, ldb
-          double precision A(1000, 1000)
-          double precision b(1000, 1)
-          double precision tau(1000, 1000)
-          double precision work(1000)
-          integer lwork, nrhs, info
+          double precision A(lda, lda)
+          double precision b(ldb, 1)
+          double precision work(lwork)
+          integer nrhs, info
           ! aux var
           integer i, j
 
-          lda = 1000
-          ldb = 1000
           nrhs = 1
-          lwork = 1000
-
 
           j = 1
           b(1, 1) = 1
@@ -172,3 +156,75 @@ c <http://www.gnu.org/licenses/>.
               i = i + 1
           end do
       end subroutine test03
+
+      subroutine bench(test_type)
+          ! arguments
+          integer test_type
+          ! aux var
+          integer i, j, file_id
+          integer n_v2test, ldv2test
+          double precision r
+          integer v2test(100)
+
+          ldv2test = 100
+          n_v2test = 4
+          v2test(1) = 10
+          v2test(2) = 50
+          v2test(3) = 100
+          v2test(4) = 500
+
+          select case(test_type)
+              case(1)
+                  write (*, *) 'Try to open file to test01.csv'
+                  open (unit = 1, file = "test01.csv")
+                  write (*, *) 'Success in open file to test01.csv'
+              case(2)
+                  write (*, *) 'Try to open file to test02.csv'
+                  open (unit = 1, file = "test02.csv")
+                  write (*, *) 'Success in open file to test02.csv'
+              case(3)
+                  write (*, *) 'Try to open file to test03.csv'
+                  open (unit = 1, file = "test03.csv")
+                  write (*, *) 'Success in open file to test03.csv'
+          end select
+          i = 1
+          write (1, '(a,$)') ','
+          do while (i .lt. n_v2test)
+              write (1, '(I4,a,$)') v2test(i), ','
+              i = i + 1
+          end do
+          write (1, '(I4)') v2test(n_v2test)
+
+          i = 1
+          do while (i .le. n_v2test)
+              write (1, '(I4,a,$)') v2test(i), ','
+              j = 1
+              do while (j .le. i)
+                  write (*, *) 'Run test for m = ', i, ' n = ', j
+                  select case(test_type)
+                      case(1)
+                          call test01(v2test(i), v2test(j), r)
+                      case(2)
+                          call test02(v2test(i), v2test(j), r)
+                      case(3)
+                          call test03(v2test(i), v2test(j), r)
+                  end select
+                  if (j .eq. n_v2test) then
+                      write (1, '(ES10.4)') r
+                  else
+                      write (1, '(ES10.4,a,$)') r, ','
+                  end if
+                  j = j + 1
+              end do
+              do while (j .le. n_v2test)
+                  if (j .eq. n_v2test) then
+                      write (1, '(a)') '--'
+                  else
+                      write (1, '(a,$)') '--,'
+                  end if
+                  j = j + 1
+              end do
+              i = i + 1
+          end do
+          close(1)
+      end subroutine bench
