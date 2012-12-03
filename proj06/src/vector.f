@@ -18,9 +18,9 @@ c <http://www.gnu.org/licenses/>.
           ! This function put random numbers in the vector $x : n \times
           ! 1$.
 
-          ! parameters
-          integer n
-          real x(n)
+          ! arguments
+          integer, intent(in) :: n
+          double precision, intent(out) :: x(n)
           ! aux var
           integer i
 
@@ -35,11 +35,11 @@ c <http://www.gnu.org/licenses/>.
           ! This function compute $z = x + y$, where x, y, z are vectors
           ! of size n.
 
-          ! parameters
-          integer n
-          real x(*)
-          real y(*)
-          real z(*)
+          ! arguments
+          integer, intent(in) :: n
+          double precision, intent(in) :: x(n)
+          double precision, intent(in) :: y(n)
+          double precision, intent(out) :: z(n)
 
           i = 1
           do while (i .le. n)
@@ -52,11 +52,11 @@ c <http://www.gnu.org/licenses/>.
           ! This function compute $z = x - y$, where x, y, z are vectors
           ! of size n.
 
-          ! parameters
-          integer n
-          real x(*)
-          real y(*)
-          real z(*)
+          ! arguments
+          integer, intent(in) :: n
+          double precision, intent(in) :: x(n)
+          double precision, intent(in) :: y(n)
+          double precision, intent(out) :: z(n)
 
           i = 1
           do while (i .le. n)
@@ -69,17 +69,18 @@ c <http://www.gnu.org/licenses/>.
           ! This function compute $norm = \| x \|_\infty$, where $x : n
           ! \times 1$.
 
-          ! parameters
-          integer n
-          real x(*)
-          real norm
+          ! arguments
+          integer, intent(in) :: n
+          double precision, intent(in) :: x(n)
+          double precision, intent(out) :: norm
           !aux var
-          integer i, x_abs
+          integer i
+          double precision x_abs
 
           i = 1
           norm = abs(x(i))
           do while (i .le. n)
-              x_abs = abs(x(i))
+              x_abs = dabs(x(i))
               if (norm .le. x_abs) then
                   norm = x_abs
               end if

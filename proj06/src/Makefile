@@ -25,10 +25,12 @@ compile:
 debug:
 	$(MAKE) $(MAKEFILE) DEBUG="-g"
 
-test:
-	./sample > sample.out
-	diff sample.exp sample.out
-
 benchmark:
 	./mt404_p06 > mt404_p06.csv
 	- column -s \, -t mt404_p06.csv
+
+vector.so: vector.f
+	f2py -c -m vector vector.f
+
+test: vector.so
+	python -m doctest $(VERBOSE) vector.test
