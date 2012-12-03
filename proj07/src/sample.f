@@ -15,6 +15,9 @@ c along with Octave; see the file COPYING.  If not, see
 c <http://www.gnu.org/licenses/>.
 
       program main
+          ! Example from
+          ! http://www.ee.ucla.edu/~vandenbe/103/lectures/ls.pdf
+
           double precision A(100, 100)
           double precision b(100, 1)
           double precision tau(100, 100)
@@ -25,20 +28,27 @@ c <http://www.gnu.org/licenses/>.
           ldb = 100
           nrhs = 1
           lwork = 100
-          m = 3
-          n = 3
-          A(1, 1) = 12
-          A(1, 2) = -51
-          A(1, 3) = 4
-          A(2, 1) = 6
-          A(2, 2) = 167
-          A(2, 3) = -68
-          A(3, 1) = -4
-          A(3, 2) = 24
-          A(3, 3) = -41
 
-          call dshow_matrix(A, lda, n)
-          call dgeqrf(m, n, A, lda, tau, work, lwork, info)
-          call dshow_matrix(A, lda, n)
-          !call dgels('N', m, n, nrhs, A, lda, b, ldb, work, lwork, info)
+          m = 3
+          n = 2
+          A(1, 1) =  2
+          A(1, 2) =  0
+          A(2, 1) = -1
+          A(2, 2) =  1
+          A(3, 1) =  0
+          A(3, 2) =  2
+          b(1, 1) =  1
+          b(2, 1) =  0
+          b(3, 1) =  -1
+
+          call dshow_matrix(A, lda, m, n)
+          !call dgeqrf(m, n, A, lda, tau, work, lwork, info)
+          call dshow_matrix(A, lda, m, n)
+          call dgels('N', m, n, nrhs, A, lda, b, ldb, work, lwork, info)
+          if (info .eq. 0) then
+              write (*, *) 'Sucess.'
+              call dshow_matrix(b, ldb, n, 1)
+          else
+              write (*, *) 'Fail.'
+          end if
       end program main

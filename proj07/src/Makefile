@@ -17,19 +17,25 @@
 lblas=-lblas
 llapack=-llapack
 
-all: compile
+all: mt404_p07
 
-compile:
+mt404_p07: mt404_p07.f
 	gfortran $(DEBUG) mt404_p07.f $(lblas) $(llapack) -o mt404_p07 
 
 sample: sample.f
-	gfortran $(DEBUG) sample.f dsm.f $(lblas) $(llapack) -o sample 
+	gfortran $(DEBUG) sample.f dmatrix.f $(lblas) $(llapack) -o sample 
 
 debug:
 	$(MAKE) $(MAKEFILE) DEBUG=-g
 
 benchmark:
 	./mt404_p07
+
+dmatrix.so: dmatrix.f
+	f2py -c -m dmatrix dmatrix.f
+
+test: dmatrix.so
+	python -m doctest dmatrix.test
 
 help:
 	@echo 'To compile this files you need a BLAS library and Lapack install.'
