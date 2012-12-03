@@ -20,148 +20,11 @@ c <http://www.gnu.org/licenses/>.
           call bench(3)
       end program main
 
-      subroutine test01(m, n, r)
-          ! This function match the test 1.
-
-          ! parameters
-          parameter (lda=1000, ldb=1000, lwork=1000)
-          ! arguments
-          integer, intent(in) :: m, n
-          double precision, intent(out) :: r
-          ! test var
-          double precision A(lda, lda)
-          double precision b(ldb, 1)
-          double precision work(lwork)
-          integer nrhs, info
-          ! aux var
-          integer i, j
-
-          nrhs = 1
-
-          i = 1
-          do while (i .le. n)
-              b(i, 1) = 1
-              j = 1
-              do while (j .le. n)
-                  A(i, j) = - 2 / m
-                  j = j + 1
-              end do
-              A(i, i) = A(i, i) + 1
-              i = i + 1
-          end do
-          i =  n + 1
-          do while (i .le. m)
-              b(i, 1) = 1
-              j = 1
-              do while (j .le. n)
-                  A(i, j) = - 2 / m
-                  j = j + 1
-              end do
-              i = i + 1
-          end do
-          call dgels('N', m, n, nrhs, A, lda, b, ldb, work, lwork, info)
-
-          r = 0
-          i = n + 1
-          do while (i .le. m)
-              r = r + b(i, 1) ** 2
-              i = i + 1
-          end do
-      end subroutine test01
-
-      subroutine test02(m, n, r)
-          ! This function match the test 1.
-
-          ! parameters
-          parameter (lda=1000, ldb=1000, lwork=1000)
-          ! arguments
-          integer, intent(in) :: m, n
-          double precision, intent(out) :: r
-          ! test var
-          double precision A(lda, lda)
-          double precision b(ldb, 1)
-          double precision work(lwork)
-          integer nrhs, info
-          ! aux var
-          integer i, j
-
-          nrhs = 1
-
-          i = 1
-          do while (i .le. m)
-              b(i, 1) = 1
-              j = 1
-              do while (j .le. n)
-                  A(i, j) = i * j
-                  j = j + 1
-              end do
-              i = i + 1
-          end do
-          call dgels('N', m, n, nrhs, A, lda, b, ldb, work, lwork, info)
-
-          r = 0
-          i = n + 1
-          do while (i .le. m)
-              r = r + b(i, 1) ** 2
-              i = i + 1
-          end do
-      end subroutine test02
-
-      subroutine test03(m, n, r)
-          ! This function match the test 1.
-
-          ! parameters
-          parameter (lda=1000, ldb=1000, lwork=1000)
-          ! arguments
-          integer, intent(in) :: m, n
-          double precision, intent(out) :: r
-          ! test var
-          double precision A(lda, lda)
-          double precision b(ldb, 1)
-          double precision work(lwork)
-          integer nrhs, info
-          ! aux var
-          integer i, j
-
-          nrhs = 1
-
-          j = 1
-          b(1, 1) = 1
-          do while (j .le. n)
-              A(1, j) = 0
-              j = j + 1
-          end do
-          i = 2
-          do while (i .lt. m)
-              b(i, 1) = 1
-              j = 1
-              do while (j .le. n)
-                  A(i, j) = (i - 1) * j
-                  j = j + 1
-              end do
-              i = i + 1
-          end do
-          j = 1
-          b(m, 1) = 1
-          do while (j .le. n)
-              A(m, j) = 0
-              j = j + 1
-          end do
-          call dgels('N', m, n, nrhs, A, lda, b, ldb, work, lwork, info)
-
-          r = 0
-          i = n + 1
-          do while (i .le. m)
-              r = r + b(i, 1) ** 2
-              i = i + 1
-          end do
-      end subroutine test03
-
       subroutine bench(test_type)
           ! arguments
           integer test_type
           ! aux var
-          integer i, j, file_id
+          integer i, j, file_id, info
           integer n_v2test, ldv2test
           double precision r
           integer v2test(100)
@@ -203,24 +66,32 @@ c <http://www.gnu.org/licenses/>.
                   write (*, *) 'Run test for m = ', i, ' n = ', j
                   select case(test_type)
                       case(1)
-                          call test01(v2test(i), v2test(j), r)
+                          call test(1, v2test(i), v2test(j), r, info)
                       case(2)
-                          call test02(v2test(i), v2test(j), r)
+                          call test(2, v2test(i), v2test(j), r, info)
                       case(3)
-                          call test03(v2test(i), v2test(j), r)
+                          call test(3, v2test(i), v2test(j), r, info)
                   end select
-                  if (j .eq. n_v2test) then
-                      write (1, '(ES10.4)') r
+                  if (info .eq. 0) then
+                      if (j .eq. n_v2test) then
+                          write (1, '(ES10.4)') r
+                      else
+                          write (1, '(ES10.4,a,$)') r, ','
+                      end if
                   else
-                      write (1, '(ES10.4,a,$)') r, ','
+                      if (j .eq. n_v2test) then
+                          write (1, '(a)') '***'
+                      else
+                          write (1, '(a,$)') '***,'
+                      end if
                   end if
                   j = j + 1
               end do
               do while (j .le. n_v2test)
                   if (j .eq. n_v2test) then
-                      write (1, '(a)') '--'
+                      write (1, '(a)') '---'
                   else
-                      write (1, '(a,$)') '--,'
+                      write (1, '(a,$)') '---,'
                   end if
                   j = j + 1
               end do
@@ -228,3 +99,134 @@ c <http://www.gnu.org/licenses/>.
           end do
           close(1)
       end subroutine bench
+
+      subroutine test(t_type, m, n, r, info)
+          ! This function test the LAPACK's dgels function.
+
+          ! parameters
+          parameter (lda=1000, ldb=1000, lwork=1000)
+          ! arguments
+          integer, intent(in) :: t_type, m, n
+          integer, intent(out) :: info
+          double precision, intent(out) :: r
+          ! test var
+          double precision A(lda, lda)
+          double precision b(ldb, 1)
+          double precision work(lwork)
+          integer nrhs
+          ! aux var
+          integer i, j
+
+          nrhs = 1
+
+          select case(t_type)
+              case(1)
+                  call build01(m, n, nrhs, A, lda, b, ldb)
+              case(2)
+                  call build02(m, n, nrhs, A, lda, b, ldb)
+              case(3)
+                  call build03(m, n, nrhs, A, lda, b, ldb)
+          end select
+          call dgels('N', m, n, nrhs, A, lda, b, ldb, work, lwork, info)
+
+          r = 0
+          if (info .eq. 0) then
+              i = n + 1
+              do while (i .le. m)
+                  r = r + b(i, 1) ** 2
+                  i = i + 1
+              end do
+          end if
+      end subroutine test
+
+      subroutine build01(m, n, nrhs, A, lda, b, ldb)
+          ! This function build the matrix and rhs for test 1.
+
+          ! arguments
+          integer m, n, nrhs
+          integer lda, ldb
+          double precision A(lda, lda)
+          double precision b(ldb, nrhs)
+          ! aux var
+          integer i, j
+
+          i = 1
+          do while (i .le. n)
+              b(i, 1) = 1
+              j = 1
+              do while (j .le. n)
+                  A(i, j) = - 2 / m
+                  j = j + 1
+              end do
+              A(i, i) = A(i, i) + 1
+              i = i + 1
+          end do
+          i =  n + 1
+          do while (i .le. m)
+              b(i, 1) = 1
+              j = 1
+              do while (j .le. n)
+                  A(i, j) = - 2 / m
+                  j = j + 1
+              end do
+              i = i + 1
+          end do
+      end subroutine build01
+
+      subroutine build02(m, n, nrhs, A, lda, b, ldb)
+          ! This function build the matrix and rhs for test 2.
+
+          ! arguments
+          integer m, n, nrhs
+          integer lda, ldb
+          double precision A(lda, lda)
+          double precision b(ldb, nrhs)
+          ! aux var
+          integer i, j
+
+          i = 1
+          do while (i .le. m)
+              b(i, 1) = 1
+              j = 1
+              do while (j .le. n)
+                  A(i, j) = i * j
+                  j = j + 1
+              end do
+              i = i + 1
+          end do
+      end subroutine build02
+
+      subroutine build03(m, n, nrhs, A, lda, b, ldb)
+          ! This function build the matrix and rhs for test 2.
+
+          ! arguments
+          integer m, n, nrhs
+          integer lda, ldb
+          double precision A(lda, lda)
+          double precision b(ldb, nrhs)
+          ! aux var
+          integer i, j
+
+          j = 1
+          b(1, 1) = 1
+          do while (j .le. n)
+              A(1, j) = 0
+              j = j + 1
+          end do
+          i = 2
+          do while (i .lt. m)
+              b(i, 1) = 1
+              j = 1
+              do while (j .le. n)
+                  A(i, j) = (i - 1) * j
+                  j = j + 1
+              end do
+              i = i + 1
+          end do
+          j = 1
+          b(m, 1) = 1
+          do while (j .le. n)
+              A(m, j) = 0
+              j = j + 1
+          end do
+      end subroutine build03
