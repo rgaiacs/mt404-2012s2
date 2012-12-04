@@ -61,9 +61,10 @@ c <http://www.gnu.org/licenses/>.
           ! The Cholesky factor is store in the memory space of $A$.
 
           ! parameters
-          integer n, lda, s
-          double precision A(lda, *)
-          double precision tol
+          integer, intent(in) :: n, lda
+          integer, intent(out) :: s
+          double precision, intent(inout) :: A(lda, *)
+          double precision, intent(in) :: tol
           ! aux var
           integer i
           integer j
@@ -107,11 +108,12 @@ c <http://www.gnu.org/licenses/>.
           ! \times n$, using the Cholesky Decomposition.
 
           ! parameters
-          integer lda, n, s
-          double precision A(lda, *)
-          double precision x(*)
-          double precision b(*)
-          double precision tol
+          integer, intent(in) :: lda, n
+          integer, intent(out) :: s
+          double precision, intent(inout) :: A(lda, lda)
+          double precision, intent(out) :: x(lda)
+          double precision, intent(in) :: b(lda)
+          double precision, intent(in) :: tol
           ! aux var
           double precision y(lda)
 

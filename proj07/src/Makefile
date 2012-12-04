@@ -14,28 +14,31 @@
 # along with Octave; see the file COPYING.  If not, see
 # <http://www.gnu.org/licenses/>.
 
+# To enable debug mode, use
+#
+#     $ make DEBUG=-g <args>
+#
+# To change the flags passed to gfortran, use
+#
+#     $ make FFLAGS=-ansi
+FFLAGS=-pedantic -Wall -Waliasing -Wconversion-extra -Werror
 lblas=-lblas
 llapack=-llapack
 
-all: mt404_p07
+benchmark: mt404_p07
+	./mt404_p07
 
 mt404_p07: mt404_p07.f
-	gfortran $(DEBUG) mt404_p07.f $(lblas) $(llapack) -o mt404_p07 
+	gfortran $(DEBUG) $(FFLAGS) mt404_p07.f $(lblas) $(llapack) -o mt404_p07 
 
 sample: sample.f
 	gfortran $(DEBUG) sample.f dmatrix.f $(lblas) $(llapack) -o sample 
 
-debug:
-	$(MAKE) $(MAKEFILE) DEBUG=-g
-
-benchmark:
-	./mt404_p07
+test: dmatrix.so
+	python -m doctest dmatrix.test
 
 dmatrix.so: dmatrix.f
 	f2py -c -m dmatrix dmatrix.f
-
-test: dmatrix.so
-	python -m doctest dmatrix.test
 
 help:
 	@echo 'To compile this files you need a BLAS library and Lapack install.'

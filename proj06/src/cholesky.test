@@ -4,124 +4,44 @@ Fortran" (see http://osdir.com/ml/python.scientific.user/2003-10/msg00034.html)
 Test show_chol is not possible beacuse "Python I/O will not catch I/O from
 Fortran" (see http://osdir.com/ml/python.scientific.user/2003-10/msg00034.html)
 
+    >>> import numpy
+    >>> import cholesky
+
 Test chol
 
-    >>> A = numpy.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-    >>> A = square_matrix.transpose_smatrix(A, 3)
-    >>> A
-    array([[ 1.,  0.,  0.],
-           [ 0.,  1.,  0.],
-           [ 0.,  0.,  1.]])
-    >>> A = numpy.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-    >>> A = square_matrix.transpose_smatrix(A, 3)
-    >>> A
-    array([[ 1.,  4.,  7.],
-           [ 2.,  5.,  8.],
-           [ 3.,  6.,  9.]])
+From http://www.ee.ucla.edu/~vandenbe/103/lectures/chol.pdf
 
-Test is_symmetric
-
-    >>> A = numpy.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-    >>> square_matrix.is_symmetric(A, 3)
-    1
-    >>> A = numpy.array([[1, 2, 3], [2, 4, 5], [3, 5, 6]])
-    >>> square_matrix.is_symmetric(A, 3)
-    1
-    >>> A = numpy.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-    >>> square_matrix.is_symmetric(A, 3)
+    >>> A = numpy.array([[25, 15, -5], [15, 18, 0], [-5, 0, 11]])
+    >>> [A, s] = cholesky.chol(A, 3, 1e-8)
+    >>> s
     0
+    >>> A
+    array([[  5.,  15.,  -5.],
+           [  3.,   3.,   0.],
+           [ -1.,   1.,   3.]])
 
-Test rand_tl
+From http://ocw.mit.edu/courses/mathematics/18-335j-introduction-to-numerical-methods-fall-2004/lecture-notes/lecture12.pdf
 
-    >>> A = numpy.array([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
-    >>> A = square_matrix.rand_tl(A, 3)
-    >>> [A[0, 1], A[0, 2], A[1, 2]]
-    [0.0, 0.0, 0.0]
+    >>> A = numpy.array([[1, 2, 3], [2, 13, 18], [3, 18, 50]])
+    >>> [A, s] = cholesky.chol(A, 3, 1e-8)
+    >>> s
+    0
+    >>> A
+    array([[  1.,   2.,   3.],
+           [  2.,   3.,  18.],
+           [  3.,   4.,   5.]])
 
-Test sum_identity
+Test solve_with_chol
 
-    >>> A = numpy.array([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
-    >>> square_matrix.sum_identity(A, 3)
-    array([[ 1.,  0.,  0.],
-           [ 0.,  1.,  0.],
-           [ 0.,  0.,  1.]])
-    >>> A = numpy.array([[1, 0, 0], [0, 2, 0], [0, 0, 3]])
-    >>> square_matrix.sum_identity(A, 3)
-    array([[ 2.,  0.,  0.],
-           [ 0.,  3.,  0.],
-           [ 0.,  0.,  4.]])
-    >>> A = numpy.array([[0, 2, 3], [4, 0, 5], [6, 7, 0]])
-    >>> square_matrix.sum_identity(A, 3)
-    array([[ 1.,  2.,  3.],
-           [ 4.,  1.,  5.],
-           [ 6.,  7.,  1.]])
+From http://ahmad.mech-research.com/TA/Files/Numeric/assign2.pdf
 
-Test mtv
-
-    >>> A = numpy.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-    >>> x = numpy.array([1, 1, 1])
-    >>> square_matrix.mtv(A, x, 3)
-    array([ 1.,  1.,  1.])
-    >>> x = numpy.array([1, 2, 3])
-    >>> square_matrix.mtv(A, x, 3)
-    array([ 1.,  2.,  3.])
-    >>> A = numpy.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]])
-    >>> x = numpy.array([1, 1, 1])
-    >>> square_matrix.mtv(A, x, 3)
-    array([ 3.,  3.,  3.])
-    >>> A = numpy.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-    >>> x = numpy.array([1, 1, 1])
-    >>> square_matrix.mtv(A, x, 3)
-    array([  6.,  15.,  24.])
-
-Test mt2
-
-    >>> G = numpy.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-    >>> square_matrix.mt2(G, 3)
-    array([[ 1.,  0.,  0.],
-           [ 0.,  1.,  0.],
-           [ 0.,  0.,  1.]])
-    >>> G = numpy.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]])
-    >>> square_matrix.mt2(G, 3)
-    array([[ 3.,  3.,  3.],
-           [ 3.,  3.,  3.],
-           [ 3.,  3.,  3.]])
-    >>> G = numpy.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-    >>> square_matrix.mt2(G, 3)
-    array([[  14.,   32.,   50.],
-           [  32.,   77.,  122.],
-           [  50.,  122.,  194.]])
-
-Test solve_tl
-
-    >>> A = numpy.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-    >>> b = numpy.array([1, 1, 1])
-    >>> square_matrix.solve_tl(A, b, 3)
-    array([ 1.,  1.,  1.])
-    >>> b = numpy.array([2, 2, 2])
-    >>> square_matrix.solve_tl(A, b, 3)
-    array([ 2.,  2.,  2.])
-    >>> A = numpy.array([[1, 0, 0], [1, 1, 0], [1, 1, 1]])
-    >>> b = numpy.array([1, 2, 3])
-    >>> square_matrix.solve_tl(A, b, 3)
-    array([ 1.,  1.,  1.])
-    >>> b = numpy.array([1, 3, 6])
-    >>> square_matrix.solve_tl(A, b, 3)
-    array([ 1.,  2.,  3.])
-
-Test solve_tu
-
-    >>> A = numpy.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-    >>> b = numpy.array([1, 1, 1])
-    >>> square_matrix.solve_tu(A, b, 3)
-    array([ 1.,  1.,  1.])
-    >>> b = numpy.array([2, 2, 2])
-    >>> square_matrix.solve_tu(A, b, 3)
-    array([ 2.,  2.,  2.])
-    >>> A = numpy.array([[1, 1, 1], [0, 1, 1], [0, 0, 1]])
-    >>> b = numpy.array([3, 2, 1])
-    >>> square_matrix.solve_tu(A, b, 3)
-    array([ 1.,  1.,  1.])
-    >>> b = numpy.array([6, 3, 1])
-    >>> square_matrix.solve_tu(A, b, 3)
-    array([ 3.,  2.,  1.])
+    >>> A = numpy.array([[9, 3, 3, 3],
+    ...                  [3, 10, -2, -2],
+    ...                  [3, -2, 18, 10],
+    ...                  [3, -2, 10, 10]])
+    >>> b = numpy.array([24, 17, 45, 29])
+    >>> [A, x, s] = cholesky.solve_with_chol(A, b, 4, 1e-8)
+    >>> s
+    0
+    >>> x
+    array([ 1.,  2.,  2.,  1.])
