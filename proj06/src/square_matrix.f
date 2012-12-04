@@ -14,13 +14,13 @@ c You should have received a copy of the GNU General Public License
 c along with Octave; see the file COPYING.  If not, see
 c <http://www.gnu.org/licenses/>.
 
-      subroutine copy_matrix(A, A_copy, lda, n)
+      subroutine copy_smatrix(A, A_copy, lda, n)
           ! This function create a copy of $A : n \times n$ in $A_copy$.
 
-          ! parameters
-          integer n, lda
-          real A(lda, *)
-          real A_copy(lda, *)
+          ! arguments
+          integer, intent(in) :: n, lda
+          double precision, intent (in) :: A(lda, lda)
+          double precision, intent (out) :: A_copy(lda, lda)
           !aux var
           integer i, j
 
@@ -33,15 +33,15 @@ c <http://www.gnu.org/licenses/>.
               end do
               i = i + 1
           end do
-      end subroutine copy_matrix
+      end subroutine copy_smatrix
 
       subroutine show_smatrix(A, lda, n)
           ! This function pretty print on the screen the matrix $A : n
           ! \times n$.
 
-          ! parameters
-          integer n, lda
-          real A(lda, *)
+          ! arguments
+          integer, intent(in) :: n, lda
+          double precision, intent(in) :: A(lda, *)
           ! aux var
           integer i, j
 
@@ -56,11 +56,12 @@ c <http://www.gnu.org/licenses/>.
           ! This function transpose the matrix $A : n \times n$ in
           ! place.
 
-          ! parameters
-          integer lda, n
-          real A(lda, *)
+          ! arguments
+          integer, intent(in) :: lda, n
+          double precision, intent(inout) :: A(lda, lda)
           ! aux var
           integer i, j
+          double precision temp
 
           i = 1
           do while (i .le. n)
@@ -79,9 +80,10 @@ c <http://www.gnu.org/licenses/>.
           ! This function verify if the matrix $A : n \times n$ is
           ! symmetric.
 
-          ! parameters
-          integer lda, n, s
-          real A(lda, *)
+          ! arguments
+          integer, intent(in) :: lda, n
+          double precision, intent(in) :: A(lda, lda)
+          integer, intent(out) :: s
           ! aux var
           integer i, j
 
@@ -104,9 +106,9 @@ c <http://www.gnu.org/licenses/>.
           ! This function put random numbers in the lower triangular
           ! part of the matrix $A : n \times n$.
 
-          ! parameters
-          integer n, lda
-          real A(lda, *)
+          ! arguments
+          integer, intent(in) :: n, lda
+          double precision, intent(inout) :: A(lda, lda)
           ! aux var
           integer i, j
 
@@ -125,9 +127,9 @@ c <http://www.gnu.org/licenses/>.
           ! This function sum 1 at each element in the main diagonal of
           ! the matrix $A : n \times n$.
 
-          ! parameters
+          ! arguments
           integer n, lda
-          real A(lda, *)
+          double precision A(lda, *)
           ! aux var
           integer i
 
@@ -142,11 +144,11 @@ c <http://www.gnu.org/licenses/>.
           ! This function compute $z = A x$, where $A : n \times n$ and
           ! $x : n \times 1$.
 
-          ! parameters
+          ! arguments
           integer n, lda
-          real A(lda, *)
-          real x(*)
-          real z(*)
+          double precision A(lda, *)
+          double precision x(*)
+          double precision z(*)
           ! aux var
           integer i, j
 
@@ -164,10 +166,10 @@ c <http://www.gnu.org/licenses/>.
       subroutine mt2(A, G, lda, n)
           ! This function compute $A = G G^t$, where $G : n \times n$.
 
-          ! parameters
+          ! arguments
           integer n, lda
-          real A(lda, *)
-          real G(lda, *)
+          double precision A(lda, *)
+          double precision G(lda, *)
           ! aux var
           integer i, j, k
 
@@ -193,14 +195,14 @@ c <http://www.gnu.org/licenses/>.
           ! This function compute $x = A^{-1} b$, where $A : n \times n$
           ! is a lower triangular matrix.
 
-          ! parameters
-          integer lda, n
-          real A(lda, *)
-          real x(*)
-          real b(*)
+          ! argumensts
+          integer, intent(in) :: lda, n
+          double precision, intent(in) :: A(lda, lda)
+          double precision, intent(in) :: b(lda)
+          double precision, intent(out) :: x(lda)
           ! aux var
           integer i, j
-          real b_temp(lda)
+          double precision b_temp(lda)
 
           j = 1
           do while (j .le. n)
@@ -209,12 +211,13 @@ c <http://www.gnu.org/licenses/>.
           end do
           j = 1
           do while (j .le. n)
-              i = 1
+              i = j
+              x(j) = b(j) / A(j, j)
+              i = i + 1
               do while (i .le. j - 1)
                   b_temp(j) = b_temp(j) - A(i, j) * x(j)
                   i = i + 1
               end do
-              x(j) = b(j) / A(j, j)
               j = j + 1
           end do
       end subroutine solve_tl
@@ -223,14 +226,14 @@ c <http://www.gnu.org/licenses/>.
           ! This function compute $x = A^{-1} b$, where $A : n \times n$
           ! is a upper triangular matrix.
 
-          ! parameters
+          ! arguments
           integer lda, n
-          real A(lda, *)
-          real x(*)
-          real b(*)
+          double precision A(lda, *)
+          double precision x(*)
+          double precision b(*)
           ! aux var
           integer i, j
-          real b_temp(lda)
+          double precision b_temp(lda)
 
           j = 1
           do while (j .le. n)

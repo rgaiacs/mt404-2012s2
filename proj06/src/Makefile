@@ -14,23 +14,25 @@
 # along with Octave; see the file COPYING.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-all: compile
+benchmark: mt404_p06
+	./mt404_p06 > mt404_p06.csv
+	- column -s \, -t mt404_p06.csv
 
-compile:
-	gfortran $(DEBUG) -o sample sample.f cholesky.f square_matrix.f \
-	vector.f
+mt404_p06: mt404_pp06.f cholesky.f square_matrix.f
 	gfortran $(DEBUG) -o mt404_p06 mt404_p06.f cholesky.f \
 	square_matrix.f vector.f
 
 debug:
 	$(MAKE) $(MAKEFILE) DEBUG="-g"
 
-benchmark:
-	./mt404_p06 > mt404_p06.csv
-	- column -s \, -t mt404_p06.csv
-
 vector.so: vector.f
 	f2py -c -m vector vector.f
 
-test: vector.so
+square_matrix.so: square_matrix.f
+	f2py -m square_matrix -h square_matrix.pyf square_matrix.f
+	sed -i 's/inout/in,out/g' square_matrix.pyf
+	f2py -c square_matrix.pyf square_matrix.f
+
+test: vector.so square_matrix.so
 	python -m doctest $(VERBOSE) vector.test
+	python -m doctest $(VERBOSE) square_matrix.test

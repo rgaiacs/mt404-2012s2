@@ -1,0 +1,54 @@
+Test copy_smatrix
+
+    >>> import square_matrix
+    >>> import numpy
+    >>> A = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+    >>> square_matrix.copy_smatrix(A, 3)
+    array([[ 1.,  0.,  0.],
+           [ 0.,  1.,  0.],
+           [ 0.,  0.,  1.]])
+    >>> A = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    >>> square_matrix.copy_smatrix(A, 3)
+    array([[ 1.,  2.,  3.],
+           [ 4.,  5.,  6.],
+           [ 7.,  8.,  9.]])
+
+Test show_smatrix is not possible beacuse "Python I/O will not catch I/O from
+Fortran" (see http://osdir.com/ml/python.scientific.user/2003-10/msg00034.html)
+
+Test transpose_smatrix
+
+    >>> A = numpy.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+    >>> A = square_matrix.transpose_smatrix(A, 3)
+    >>> A
+    array([[ 1.,  0.,  0.],
+           [ 0.,  1.,  0.],
+           [ 0.,  0.,  1.]])
+    >>> A = numpy.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+    >>> A = square_matrix.transpose_smatrix(A, 3)
+    >>> A
+    array([[ 1.,  4.,  7.],
+           [ 2.,  5.,  8.],
+           [ 3.,  6.,  9.]])
+
+Test is_symmetric
+
+    >> A = numpy.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+    >> square_matrix.is_symmetric(A, 3)
+    1
+    >> A = numpy.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+    >> square_matrix.transpose_smatrix(A, 3)
+    0
+
+Test rand_tl
+
+    >> A = square_matrix.rand_tl(3, 3)
+    >> A.size
+    9
+
+Test solve_tl
+
+    >>> A = numpy.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+    >>> b = numpy.array([1, 1, 1])
+    >>> x = square_matrix.solve_tl(A, b, 3)
+    >>> 
