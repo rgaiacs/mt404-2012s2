@@ -26,7 +26,7 @@
 \input{../packages.tex}
 \usepackage{csvsimple}
 \begin{document}
-\title{Projeto No.6 de MT404}
+\title{Projeto No.6 de MT404 (Versão Corrigida)}
 \author{Raniere Silva \\ ra092767  \and Julio Cesar \\ ra984581}
 \maketitle
 \begin{abstract}
@@ -102,12 +102,17 @@ Alguns pontos que chamam a atenção na Tabela~\ref{tab:res} são:
 A explicar essas observações ficam para trabalhos futuros.
 
 \section{C\'{o}digos}
-A seguir encontra-se os c\'{o}digos desenvolvidos neste projeto e que
+A seguir encontra-se alguns dos c\'{o}digos desenvolvidos neste projeto e que
 encontram-se disponíveis em \url{https://github.com/r-gaia-cs/mt404-2012s2}.
 
-Todos os c\'{o}digos foram implementados em Fortran e as instruções para
-compilação encontram-se no Código~\ref{code:Makefile}. Para os testes
+Todos os c\'{o}digos a seguir foram implementados em Fortran e as instruções
+para compilação encontram-se no Código~\ref{code:Makefile}. Para os testes
 computacionais utilizou-se a versão do gfortran baseada no gcc 4.6.3.
+
+Os Códigos~\ref{code:vector},~\ref{code:square_matrix}~e~\ref{code:cholesky}
+foram testando utilizando o framework doctest do Python por meio do wrap criado
+através da ferramenta F2PY \cite{Scipy}. Para ver os testes, acesse
+\url{https://github.com/r-gaia-cs/mt404-2012s2}.
 \lstinputlisting[style=codes, caption={Rotina de teste},
 label={code:mt404_p06}]{src/mt404_p06.f}
 \lstinputlisting[style=codes, caption={Subrotinas envolvendo vetores},
