@@ -1,0 +1,55 @@
+    >>> import vector
+
+Test rand_v
+
+    >>> x = vector.rand_v(3)
+    >>> x.size
+    3
+    >>> x = vector.rand_v(8)
+    >>> x.size
+    8
+
+Test vpv
+
+    >>> x = [0, 0, 0]
+    >>> y = [0, 0, 0]
+    >>> vector.vpv(x, y)
+    array([ 0.,  0.,  0.])
+    >>> x = [1, 1, 1]
+    >>> vector.vpv(x, y)
+    array([ 1.,  1.,  1.])
+    >>> y = [1, 1, 1]
+    >>> vector.vpv(x, y)
+    array([ 2.,  2.,  2.])
+
+Test vpov
+
+    >>> x = [0, 0, 0]
+    >>> y = [0, 0, 0]
+    >>> vector.vpov(x, y)
+    array([ 0.,  0.,  0.])
+    >>> x = [1, 1, 1]
+    >>> vector.vpov(x, y)
+    array([ 1.,  1.,  1.])
+    >>> y = [1, 1, 1]
+    >>> vector.vpov(x, y)
+    array([ 0.,  0.,  0.])
+    >>> x = [0, 0, 0]
+    >>> y = [1, 1, 1]
+    >>> vector.vpov(x, y)
+    array([-1., -1., -1.])
+
+Test vnorm_inf
+
+    >>> x = [0, 0, 0]
+    >>> vector.vnorm_inf(x)
+    0.0
+    >>> x = [1, 0, 0]
+    >>> vector.vnorm_inf(x)
+    1.0
+    >>> x = [1, 2, 3]
+    >>> vector.vnorm_inf(x)
+    3.0
+    >>> x = [-4, 2, 3]
+    >>> vector.vnorm_inf(x)
+    4.0
