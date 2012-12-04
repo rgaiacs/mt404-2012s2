@@ -115,8 +115,8 @@ c <http://www.gnu.org/licenses/>.
           i = 1
           do while (i .le. n)
               j = 1
-              do while (j .le. n)
-                  A(i, j) = rand()
+              do while (j .le. i)
+                  A(i, j) = dble(rand())
                   j = j + 1
               end do
               i = i + 1
@@ -128,8 +128,8 @@ c <http://www.gnu.org/licenses/>.
           ! the matrix $A : n \times n$.
 
           ! arguments
-          integer n, lda
-          double precision A(lda, *)
+          integer, intent(in) :: n, lda
+          double precision, intent(inout) :: A(lda, lda)
           ! aux var
           integer i
 
@@ -145,10 +145,10 @@ c <http://www.gnu.org/licenses/>.
           ! $x : n \times 1$.
 
           ! arguments
-          integer n, lda
-          double precision A(lda, *)
-          double precision x(*)
-          double precision z(*)
+          integer, intent(in) :: n, lda
+          double precision, intent(in) :: A(lda, lda)
+          double precision, intent(in) :: x(lda)
+          double precision, intent(out) :: z(lda)
           ! aux var
           integer i, j
 
@@ -167,9 +167,9 @@ c <http://www.gnu.org/licenses/>.
           ! This function compute $A = G G^t$, where $G : n \times n$.
 
           ! arguments
-          integer n, lda
-          double precision A(lda, *)
-          double precision G(lda, *)
+          integer, intent(in) :: n, lda
+          double precision, intent(out) :: A(lda, lda)
+          double precision, intent(in) ::  G(lda, lda)
           ! aux var
           integer i, j, k
 
@@ -179,7 +179,7 @@ c <http://www.gnu.org/licenses/>.
           do while (i .le. n)
               j = 1
               do while (j .le. n)
-                  A(i, j) = 0
+                  A(i, j) = 0.0
                   k = 1
                   do while (k .le. n)
                       A(i, j) = A(i, j) + G(i, k) * G(j, k)
@@ -212,10 +212,10 @@ c <http://www.gnu.org/licenses/>.
           j = 1
           do while (j .le. n)
               i = j
-              x(j) = b(j) / A(j, j)
+              x(j) = b_temp(j) / A(j, j)
               i = i + 1
-              do while (i .le. j - 1)
-                  b_temp(j) = b_temp(j) - A(i, j) * x(j)
+              do while (i .le. n)
+                  b_temp(i) = b_temp(i) - A(i, j) * x(j)
                   i = i + 1
               end do
               j = j + 1
@@ -227,10 +227,10 @@ c <http://www.gnu.org/licenses/>.
           ! is a upper triangular matrix.
 
           ! arguments
-          integer lda, n
-          double precision A(lda, *)
-          double precision x(*)
-          double precision b(*)
+          integer, intent(in) :: lda, n
+          double precision, intent(in) :: A(lda, lda)
+          double precision, intent(in) :: b(lda)
+          double precision, intent(out) :: x(lda)
           ! aux var
           integer i, j
           double precision b_temp(lda)
@@ -242,12 +242,12 @@ c <http://www.gnu.org/licenses/>.
           end do
           j = n
           do while (j .ge. 1)
-              i = n
-              do while (i .ge. j + 1)
-                  b_temp(j) = b_temp(j) - A(i, j) * x(j)
+              x(j) = b_temp(j) / A(j, j)
+              i = j - 1
+              do while (i .ge. 1)
+                  b_temp(i) = b_temp(i) - A(i, j) * x(j)
                   i = i - 1
               end do
-              x(j) = b(j) / A(j, j)
               j = j - 1
           end do
       end subroutine solve_tu

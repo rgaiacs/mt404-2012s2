@@ -1,22 +1,10 @@
-Test copy_smatrix
-
-    >>> import square_matrix
-    >>> import numpy
-    >>> A = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
-    >>> square_matrix.copy_smatrix(A, 3)
-    array([[ 1.,  0.,  0.],
-           [ 0.,  1.,  0.],
-           [ 0.,  0.,  1.]])
-    >>> A = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-    >>> square_matrix.copy_smatrix(A, 3)
-    array([[ 1.,  2.,  3.],
-           [ 4.,  5.,  6.],
-           [ 7.,  8.,  9.]])
-
-Test show_smatrix is not possible beacuse "Python I/O will not catch I/O from
+Test chol_status is not possible beacuse "Python I/O will not catch I/O from
 Fortran" (see http://osdir.com/ml/python.scientific.user/2003-10/msg00034.html)
 
-Test transpose_smatrix
+Test show_chol is not possible beacuse "Python I/O will not catch I/O from
+Fortran" (see http://osdir.com/ml/python.scientific.user/2003-10/msg00034.html)
+
+Test chol
 
     >>> A = numpy.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
     >>> A = square_matrix.transpose_smatrix(A, 3)

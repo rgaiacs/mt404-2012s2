@@ -38,7 +38,7 @@ c <http://www.gnu.org/licenses/>.
 
           ! parameters
           integer n, lda, s
-          real G(lda, *)
+          double precision G(lda, *)
           ! aux var
           integer i
           integer j
@@ -62,8 +62,8 @@ c <http://www.gnu.org/licenses/>.
 
           ! parameters
           integer n, lda, s
-          real A(lda, *)
-          real tol
+          double precision A(lda, *)
+          double precision tol
           ! aux var
           integer i
           integer j
@@ -108,12 +108,12 @@ c <http://www.gnu.org/licenses/>.
 
           ! parameters
           integer lda, n, s
-          real A(lda, *)
-          real x(*)
-          real b(*)
-          real tol
+          double precision A(lda, *)
+          double precision x(*)
+          double precision b(*)
+          double precision tol
           ! aux var
-          real y(lda)
+          double precision y(lda)
 
           call chol(A, lda, n, s, tol)
           if (s .eq. 0) then

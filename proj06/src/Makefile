@@ -14,25 +14,52 @@
 # along with Octave; see the file COPYING.  If not, see
 # <http://www.gnu.org/licenses/>.
 
+# To enable debug mode, use
+#
+#     $ make DEBUG="-g" <args>
+#
+# To change the flags passed to gfortran, use
+#
+#     $ make FFLAGS='-ansi'
+FFLAGS=-pedantic -Wall -Waliasing -Wconversion-extra -Werror
+
 benchmark: mt404_p06
 	./mt404_p06 > mt404_p06.csv
 	- column -s \, -t mt404_p06.csv
 
-mt404_p06: mt404_pp06.f cholesky.f square_matrix.f
-	gfortran $(DEBUG) -o mt404_p06 mt404_p06.f cholesky.f \
+mt404_p06: mt404_p06.f cholesky.f square_matrix.f
+	gfortran $(DEBUG) $(FFLAGS) -o mt404_p06 mt404_p06.f cholesky.f \
 	square_matrix.f vector.f
 
-debug:
-	$(MAKE) $(MAKEFILE) DEBUG="-g"
+test: vector.so square_matrix.so
+	python -m doctest $(VERBOSE) vector.test
+	python -m doctest $(VERBOSE) square_matrix.test
 
 vector.so: vector.f
-	f2py -c -m vector vector.f
+	f2py -m vector -h vector.pyf vector.f
+	sed -i 's/inout/in,out/g' vector.pyf
+	f2py -c vector.pyf vector.f
 
 square_matrix.so: square_matrix.f
 	f2py -m square_matrix -h square_matrix.pyf square_matrix.f
 	sed -i 's/inout/in,out/g' square_matrix.pyf
 	f2py -c square_matrix.pyf square_matrix.f
 
-test: vector.so square_matrix.so
-	python -m doctest $(VERBOSE) vector.test
-	python -m doctest $(VERBOSE) square_matrix.test
+cholesky.so: cholesky.f
+	f2py -m cholesky -h cholesky.pyf cholesky.f
+	sed -i 's/inout/in,out/g' cholesky.pyf
+	f2py -c cholesky.pyf cholesky.f
+
+clean:
+	- rm *.so
+	- rm *.pyf
+	- rm mt404_p06
+
+help:
+	@echo 'This is the Makefile of Proj06.'
+	@echo ''
+	@echo 'Usage:'
+	@echo '    - benchmark: compile and run the benchmark,'
+	@echo "    - test: use f2py and Python's doctest to check for"
+	@echo "    bugs in the fortran files.                        "
+	@echo '    - clean: remove all aux files.'

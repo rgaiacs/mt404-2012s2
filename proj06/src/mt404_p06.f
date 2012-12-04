@@ -15,11 +15,11 @@ c along with Octave; see the file COPYING.  If not, see
 c <http://www.gnu.org/licenses/>.
 
       program main
-          integer n, lda, state, n_rand, i
+          integer n, lda, state, i
           integer rand_dim(100)
-          real A(100, 100)
-          real G(100, 100)
-          real tol, erro, res
+          double precision A(100, 100)
+          double precision G(100, 100)
+          double precision tol, erro, res
           lda = 100
           tol = 1.0E-8
           
@@ -27,59 +27,59 @@ c <http://www.gnu.org/licenses/>.
      .",Res\'{i}duo Relativo"
           ! Matrix A1
           n = 3
-          A(1, 1) = 36
-          A(1, 2) = 30
-          A(1, 3) = 24
-          A(2, 1) = 30
-          A(2, 2) = 34
-          A(2, 3) = 26
-          A(3, 1) = 24
-          A(3, 2) = 26
-          A(3, 3) = 21
+          A(1, 1) = 36.0
+          A(1, 2) = 30.0
+          A(1, 3) = 24.0
+          A(2, 1) = 30.0
+          A(2, 2) = 34.0
+          A(2, 3) = 26.0
+          A(3, 1) = 24.0
+          A(3, 2) = 26.0
+          A(3, 3) = 21.0
           call test_matrix(A, lda, n, tol, state, erro, res)
           call write_info(state, 1, 1, n, erro, res)
 
           ! Matrix A2
           n = 5
-          A(1, 1) =  1
-          A(1, 2) = -1
-          A(1, 3) =  1
-          A(1, 4) = -1
-          A(1, 5) =  1
-          A(2, 1) = -1
-          A(2, 2) =  2
-          A(2, 3) = -2
-          A(2, 4) =  2
-          A(2, 5) = -2
-          A(3, 1) =  1
-          A(3, 2) = -2
-          A(3, 3) =  3
-          A(3, 4) = -3
-          A(3, 5) =  3
-          A(4, 1) = -1
-          A(4, 2) =  2
-          A(4, 3) = -3
-          A(4, 4) =  4
-          A(4, 5) = -4
-          A(5, 1) =  1
-          A(5, 2) = -2
-          A(5, 3) =  3
-          A(5, 4) = -4
-          A(5, 5) =  5
+          A(1, 1) =  1.0
+          A(1, 2) = -1.0
+          A(1, 3) =  1.0
+          A(1, 4) = -1.0
+          A(1, 5) =  1.0
+          A(2, 1) = -1.0
+          A(2, 2) =  2.0
+          A(2, 3) = -2.0
+          A(2, 4) =  2.0
+          A(2, 5) = -2.0
+          A(3, 1) =  1.0
+          A(3, 2) = -2.0
+          A(3, 3) =  3.0
+          A(3, 4) = -3.0
+          A(3, 5) =  3.0
+          A(4, 1) = -1.0
+          A(4, 2) =  2.0
+          A(4, 3) = -3.0
+          A(4, 4) =  4.0
+          A(4, 5) = -4.0
+          A(5, 1) =  1.0
+          A(5, 2) = -2.0
+          A(5, 3) =  3.0
+          A(5, 4) = -4.0
+          A(5, 5) =  5.0
           call test_matrix(A, lda, n, tol, state, erro, res)
           call write_info(state, 2, 2, n, erro, res)
 
           ! Matrix A3
           n = 3
-          A(1, 1) =   3
-          A(1, 2) =  -6
-          A(1, 3) =   9
-          A(2, 1) =  -6
-          A(2, 2) =  14
-          A(2, 3) = -20
-          A(3, 1) =   9
-          A(3, 2) = -20
-          A(3, 3) =  29
+          A(1, 1) =   3.0
+          A(1, 2) =  -6.0
+          A(1, 3) =   9.0
+          A(2, 1) =  -6.0
+          A(2, 2) =  14.0
+          A(2, 3) = -20.0
+          A(3, 1) =   9.0
+          A(3, 2) = -20.0
+          A(3, 3) =  29.0
           call test_matrix(A, lda, n, tol, state, erro, res)
           call write_info(state, 3, 3, n, erro, res)
 
@@ -105,19 +105,19 @@ c <http://www.gnu.org/licenses/>.
 
           ! parameters
           integer n, lda, state
-          real A(lda, *)
-          real tol, erro, res
+          double precision A(lda, *)
+          double precision tol, erro, res
           ! aux var
-          real A_copy(lda, lda)
-          real s(lda)
-          real b(lda)
-          real x(lda)
-          real aux(lda)
-          real num, den
+          double precision A_copy(lda, lda)
+          double precision s(lda)
+          double precision b(lda)
+          double precision x(lda)
+          double precision aux(lda)
+          double precision num, den
 
           call rand_v(s, n)
           call mtv(A, s, b, lda, n)
-          call copy_matrix(A, A_copy, lda, n)
+          call copy_smatrix(A, A_copy, lda, n)
           ! We need copy the matrix $A$ because it will be lost when
           ! copute the Cholesky factor.
           call solve_with_chol(A, x, b, lda, n, state, tol)
@@ -140,7 +140,7 @@ c <http://www.gnu.org/licenses/>.
 
           !parameters
           integer state, id, test, n
-          real erro, res
+          double precision erro, res
 
 900       format (i4, ',', i4, ',', i4, ',',  e10.4, ',', e10.4)
 901       format (i4, ',', i4, ',', i4, ',inf,inf')

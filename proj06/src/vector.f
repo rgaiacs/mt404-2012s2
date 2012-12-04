@@ -26,7 +26,7 @@ c <http://www.gnu.org/licenses/>.
 
           i = 1
           do while (i .le. n)
-              x(i) = rand()
+              x(i) = dble(rand())
               i = i + 1
           end do
       end subroutine rand_v
