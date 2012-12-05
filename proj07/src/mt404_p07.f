@@ -24,7 +24,7 @@ c <http://www.gnu.org/licenses/>.
           ! arguments
           integer test_type
           ! aux var
-          integer i, j, file_id, info
+          integer i, j, info
           integer n_v2test, ldv2test
           double precision r
           integer v2test(100)
@@ -51,16 +51,16 @@ c <http://www.gnu.org/licenses/>.
                   write (*, *) 'Success in open file to test03.csv'
           end select
           i = 1
-          write (1, '(a,$)') ','
+          write (1, '(a)', advance='no') '$m$ / $n$,'
           do while (i .lt. n_v2test)
-              write (1, '(I4,a,$)') v2test(i), ','
+              write (1, '(I4,a)', advance='no') v2test(i), ','
               i = i + 1
           end do
           write (1, '(I4)') v2test(n_v2test)
 
           i = 1
           do while (i .le. n_v2test)
-              write (1, '(I4,a,$)') v2test(i), ','
+              write (1, '(I4,a)', advance='no') v2test(i), ','
               j = 1
               do while (j .le. i)
                   write (*, *) 'Run test for m = ', i, ' n = ', j
@@ -76,13 +76,13 @@ c <http://www.gnu.org/licenses/>.
                       if (j .eq. n_v2test) then
                           write (1, '(ES10.4)') r
                       else
-                          write (1, '(ES10.4,a,$)') r, ','
+                          write (1, '(ES10.4,a)', advance='no') r, ','
                       end if
                   else
                       if (j .eq. n_v2test) then
                           write (1, '(a)') '***'
                       else
-                          write (1, '(a,$)') '***,'
+                          write (1, '(a)', advance='no') '***,'
                       end if
                   end if
                   j = j + 1
@@ -91,7 +91,7 @@ c <http://www.gnu.org/licenses/>.
                   if (j .eq. n_v2test) then
                       write (1, '(a)') '---'
                   else
-                      write (1, '(a,$)') '---,'
+                      write (1, '(a)', advance='no') '---,'
                   end if
                   j = j + 1
               end do
@@ -115,7 +115,7 @@ c <http://www.gnu.org/licenses/>.
           double precision work(lwork)
           integer nrhs
           ! aux var
-          integer i, j
+          integer i
 
           nrhs = 1
 
@@ -129,7 +129,7 @@ c <http://www.gnu.org/licenses/>.
           end select
           call dgels('N', m, n, nrhs, A, lda, b, ldb, work, lwork, info)
 
-          r = 0
+          r = 0.0
           if (info .eq. 0) then
               i = n + 1
               do while (i .le. m)
@@ -152,10 +152,10 @@ c <http://www.gnu.org/licenses/>.
 
           i = 1
           do while (i .le. n)
-              b(i, 1) = 1
+              b(i, 1) = 1.0
               j = 1
               do while (j .le. n)
-                  A(i, j) = - 2 / m
+                  A(i, j) = dble(- 2.0 / m)
                   j = j + 1
               end do
               A(i, i) = A(i, i) + 1
@@ -163,10 +163,10 @@ c <http://www.gnu.org/licenses/>.
           end do
           i =  n + 1
           do while (i .le. m)
-              b(i, 1) = 1
+              b(i, 1) = 1.0
               j = 1
               do while (j .le. n)
-                  A(i, j) = - 2 / m
+                  A(i, j) = dble(- 2.0 / m)
                   j = j + 1
               end do
               i = i + 1
@@ -186,10 +186,10 @@ c <http://www.gnu.org/licenses/>.
 
           i = 1
           do while (i .le. m)
-              b(i, 1) = 1
+              b(i, 1) = 1.0
               j = 1
               do while (j .le. n)
-                  A(i, j) = i * j
+                  A(i, j) = dble(i * j)
                   j = j + 1
               end do
               i = i + 1
@@ -197,7 +197,7 @@ c <http://www.gnu.org/licenses/>.
       end subroutine build02
 
       subroutine build03(m, n, nrhs, A, lda, b, ldb)
-          ! This function build the matrix and rhs for test 2.
+          ! This function build the matrix and rhs for test 3.
 
           ! arguments
           integer m, n, nrhs
@@ -208,25 +208,25 @@ c <http://www.gnu.org/licenses/>.
           integer i, j
 
           j = 1
-          b(1, 1) = 1
+          b(1, 1) = 1.0
           do while (j .le. n)
-              A(1, j) = 0
+              A(1, j) = 0.0
               j = j + 1
           end do
           i = 2
           do while (i .lt. m)
-              b(i, 1) = 1
+              b(i, 1) = 1.0
               j = 1
               do while (j .le. n)
-                  A(i, j) = (i - 1) * j
+                  A(i, j) = dble((i - 1) * j)
                   j = j + 1
               end do
               i = i + 1
           end do
           j = 1
-          b(m, 1) = 1
+          b(m, 1) = 1.0
           do while (j .le. n)
-              A(m, j) = 0
+              A(m, j) = 0.0
               j = j + 1
           end do
       end subroutine build03

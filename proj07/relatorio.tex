@@ -31,7 +31,8 @@
 \maketitle
 \begin{abstract}
     Este \'{e} o projeto no.7 da disciplina MT404 - M\'{e}todos Computacionais
-    de \'{A}lgebra Linear. Neste projeto 
+    de \'{A}lgebra Linear. Neste projeto utilizou-se a subrotina dgels da
+    biblioteca LAPACK para resolver alguns problemas de quadrados mínimos.
 \end{abstract}
 \tableofcontents
 \lstlistoflistings
@@ -44,12 +45,133 @@ http://creativecommons.org/licenses/by-sa/3.0/.
     \includegraphics{../figuras/cc-by-sa.png}
 \end{center}
 \newpage
-\section{Fatoração QR via Transformações de Householder}
+\section{Quadrados Mínimos e Fatoração QR}
+Considere o sistema linear sobredeterminado
+\begin{align*}
+    A x & = b,
+\end{align*}
+onde $A \in \mathbb{R}^{m \times n}$ e $b \in \mathbb{R}^m$. O problema de
+quadrados mínimos para o sistama anterior é definido como encontrar $x \in
+\mathbb{R}^n$ para o qual $\| A x - b \|_2$ é mínimo.
+
+A Fatoração QR consiste em encontrar matrizes $Q \in \mathbb{R}^{m \times n}$ e
+$R \in \mathbb{R}^{n \times n}$ tal que $A = QR$, $Q$ é uma matriz
+ortogonal e $R$ é uma matriz triangular superior.
+
+O sistema linear $A x = b$ pode ser transformado em
+\begin{align*}
+    Q^T A x &= Q^T b.
+\end{align*}
+Então
+\begin{align*}
+    Q^T A &= \begin{bmatrix}
+        \hat{R} \\
+        0
+    \end{bmatrix}.
+\end{align*}
+Considerando que $A$ possue posto completo e que
+\begin{align*}
+    Q^T b &= \begin{bmatrix}
+        \hat{c} \\
+        \hat{d}
+    \end{bmatrix},
+\end{align*}
+temos que
+\begin{align*}
+    A x - b &= \begin{bmatrix}
+        \hat{R} \\
+        0
+    \end{bmatrix} x - \begin{bmatrix}
+        \hat{c} \\
+        \hat{d}
+    \end{bmatrix} \\
+    &= \begin{bmatrix}
+        \hat{R} x - \hat{c} \\
+        \hat{d}
+    \end{bmatrix}.
+\end{align*}
+Como $A$ possue posto completo, então $\hat{R}$ possue posto compelto e
+portanto existe $x^*$ tal que $\hat{R} x^* - \hat{c} = 0$. Logo, a
+solução para o problema de quadrados mínimos é $\| \hat{d} \|$.
+
+\section{Resultados Computacionais}
+Para os testes computacionais, utilizou-se a subrotina dgels, da
+biblioteca LAPACK, que dentre outras funcionalidades resolve sistemas
+lineares sobredeterminados.
+
+Para os testes computacionais, utilizou-se os sistemas lineares
+correspondentes a:
+\begin{itemize}
+    \item para $n$ variável e $m \geq n$:
+        \begin{align}
+            a_i^T x - b_i &= x_i - 2/m \left( \sum_{j = 1}^n x_j
+            \right) - 1, & 1 \leq i \leq n, \notag \\
+            a_i^T x - b_i &= -2/m \left( \sum_{j = 1}^n x_j \right) - 1, & 1
+            < i \leq m,
+            \label{eq:test01}
+        \end{align}
+    \item para $n$ variável e $m \geq n$:
+        \begin{align}
+            a_i^T x - b_i &= i \left( \sum_{j = 1}^n j x_j \right) - 1, & 1 \leq
+            i \leq m,
+            \label{eq:test02}
+        \end{align}
+    \item para $n$ variável e $m \geq n$:
+        \begin{align}
+            a_1^T x - b_1 &= -1, \notag \\
+            a_m^T x - b_m &= -1
+            \label{eq:test03} \\
+            a_i^T x - b_i &= (i - 1) \left( \sum_{j = 2}^{n - 1} j x_j
+            \right) - 1, & 2 \leq i < m. \notag
+        \end{align}
+\end{itemize}
+
+Os resultados obtidos nos testes computacionais encontram-se nas
+Tabelas~\ref{tab:res01},~\ref{tab:res02}~e~\ref{tab:res03}, onde --- indica
+que aquele teste não foi realizado e *** que a subrotina degels falhou.
+\begin{table}[!htb]
+    \centering
+    \caption{Valores do resíduo para \eqref{eq:test01} ao variar $m$ e $n$.}
+    \label{tab:res01}
+    \csvautotabular{src/test01.csv}
+\end{table}
+\begin{table}[!htb]
+    \centering
+    \caption{Valores do resíduo para \eqref{eq:test02} ao variar $m$ e $n$.}
+    \label{tab:res02}
+    \csvautotabular{src/test02.csv}
+\end{table}
+\begin{table}[!htb]
+    \centering
+    \caption{Valores do resíduo para \eqref{eq:test03} ao variar $m$ e $n$.}
+    \label{tab:res03}
+    \csvautotabular{src/test03.csv}
+\end{table}
+
+Pelos dados presentes nas
+Tabelas~\ref{tab:res01},~\ref{tab:res02}~e~\ref{tab:res03} observamos que ao
+aumentar o número de linhas da matriz $A$ ($m$) o resíduo aumenta e ao
+aumentar o número de colunas da matriz $A$ ($n$) o resíduo diminui. Ambos os
+comportamentos descritos anteriormente são explicados pelo caso
+particular do problema de quadrados mínimos de ajustar uma reta a um
+conjunto de pontos.
+
+Nas Tabelas~\ref{tab:res01}~e~\ref{tab:res02} verifica-se que para $m = n$ o
+resíduo é zero pois a matriz $A$ possue posto completo. Já na
+Tabela~\ref{tab:res03} para $m = n$ a subrotina dgels falou devido as
+equações
+\begin{align*}
+    a_1^T - b_1 &= -1, \\
+    a_m^T - b_m &= -1
+\end{align*}
+que deixam o problema sem solução.
+
 \section{C\'{o}digos}
 A seguir encontra-se os c\'{o}digos desenvolvidos neste projeto e que
 encontram-se disponíveis em \url{https://github.com/r-gaia-cs/mt404-2012s2}.
 
-Todos os c\'{o}digos foram implementados em Fortran e as instruções para
+Todos os c\'{o}digos foram implementados em Fortran (utilizando a
+biblioteca LAPACK\nocite{LAPACK}) e as instruções para
 compilação encontram-se no Código~\ref{code:Makefile}. Para os testes
 computacionais utilizou-se a versão do gfortran baseada no gcc 4.6.3.
 \lstinputlisting[style=codes, caption={Rotina de teste},
